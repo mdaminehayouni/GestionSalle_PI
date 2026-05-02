@@ -1,0 +1,4221 @@
+<!doctype html>
+<html lang="fr" class="h-full">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Plateforme de Gestion des Salles Universitaires</title>
+    <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+    <script src="/_sdk/element_sdk.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&amp;display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * { font-family: 'Plus Jakarta Sans', sans-serif; }
+      .sidebar-item { transition: all 0.2s ease; }
+      .sidebar-item:hover { background: rgba(255,255,255,0.1); }
+      .sidebar-item.active { background: rgba(255,255,255,0.15); border-left: 3px solid #60a5fa; }
+      .card-hover { transition: all 0.3s ease; }
+      .card-hover:hover { transform: translateY(-2px); box-shadow: 0 10px 40px rgba(0,0,0,0.1); }
+      .btn-primary { transition: all 0.2s ease; }
+      .btn-primary:hover { transform: translateY(-1px); }
+      .fade-in { animation: fadeIn 0.3s ease; }
+      @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+      .chatbot-bubble { animation: pulse 2s infinite; }
+      @keyframes pulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4); } 50% { box-shadow: 0 0 0 10px rgba(59, 130, 246, 0); } }
+      .notification-badge { animation: bounce 1s infinite; }
+      @keyframes bounce { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+    </style>
+    <style>
+      body { box-sizing: border-box; }
+    </style>
+    <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"
+      type="text/javascript"
+    ></script>
+  </head>
+  <body class="h-full bg-gray-100">
+    <div id="app" class="h-full overflow-auto">
+      <!-- Page de Connexion -->
+      <div
+        id="login-page"
+        class="min-h-full flex items-center justify-center bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 p-4"
+      >
+        <div class="w-full max-w-md fade-in">
+          <!-- Logo et Titre -->
+          <div class="text-center mb-8">
+            <div
+              class="inline-flex items-center justify-center w-20 h-20 bg-white rounded-2xl shadow-2xl mb-6"
+            >
+              <svg
+                class="w-12 h-12 text-blue-900"
+                fill="currentColor"
+                viewbox="0 0 24 24"
+              >
+                <path
+                  d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9zM17 15.99l-5 2.73-5-2.73v-3.72L12 15l5-2.73v3.72z"
+                />
+              </svg>
+            </div>
+            <h1
+              id="university-title"
+              class="text-2xl font-bold text-white mb-2"
+            >
+              Université ISET RADES
+            </h1>
+            <h2 class="text-lg font-medium text-blue-100 mt-4">
+              Plateforme de Gestion des Salles
+            </h2>
+          </div>
+          <!-- Formulaire de Connexion -->
+          <div class="bg-white rounded-2xl shadow-2xl p-8">
+            <h3 class="text-xl font-semibold text-gray-800 mb-6 text-center">
+              Connexion
+            </h3>
+            <!-- Sélection du rôle -->
+            <!-- Sélection du rôle -->
+            <div class="flex gap-2 mb-6 p-1 bg-gray-100 rounded-xl">
+              <button
+                onclick="selectRole('enseignant')"
+                id="role-enseignant"
+                class="flex-1 py-2 px-4 rounded-lg text-sm font-medium transition-all bg-blue-900 text-white"
+              >
+                Enseignant
+              </button>
+              <button
+                onclick="selectRole('etudiant')"
+                id="role-etudiant"
+                class="flex-1 py-2 px-4 rounded-lg text-sm font-medium transition-all text-gray-600 hover:bg-gray-200"
+              >
+                Étudiant
+              </button>
+              <button
+                onclick="selectRole('chef')"
+                id="role-chef"
+                class="flex-1 py-2 px-4 rounded-lg text-sm font-medium transition-all text-gray-600 hover:bg-gray-200"
+              >
+                Chef Departement
+              </button>
+            </div>
+            <form onsubmit="handleLogin(event)" class="space-y-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2"
+                  >Adresse Email</label
+                >
+                <div class="relative">
+                  <span
+                    class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                  >
+                    <svg
+                      class="w-5 h-5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewbox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"
+                      /></svg
+                  ></span>
+                  <input
+                    type="email"
+                    placeholder="exemple@univ.ma"
+                    class="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                  />
+                </div>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2"
+                  >Mot de passe</label
+                >
+                <div class="relative">
+                  <span
+                    class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                  >
+                    <svg
+                      class="w-5 h-5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewbox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                      /></svg
+                  ></span>
+                  <input
+                    type="password"
+                    placeholder="••••••••"
+                    class="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                  />
+                </div>
+              </div>
+              <div class="flex items-center justify-between text-sm">
+                <label class="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    class="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                  />
+                  <span class="text-gray-600">Se souvenir de moi</span>
+                </label>
+                <div class="flex gap-3" id="login-links">
+                  <a
+                    href="#"
+                    class="text-blue-600 hover:text-blue-700 font-medium"
+                    >Mot de passe oublié ?</a
+                  >
+                  <span class="text-gray-400">•</span>
+                  <a
+                    href="#"
+                    onclick="showSignupForm()"
+                    class="text-blue-600 hover:text-blue-700 font-medium"
+                    >S'inscrire</a
+                  >
+                </div>
+              </div>
+              <button
+                type="submit"
+                class="w-full py-3 bg-gradient-to-r from-blue-900 to-blue-700 text-white font-semibold rounded-xl hover:from-blue-800 hover:to-blue-600 transition-all shadow-lg shadow-blue-900/30 btn-primary"
+              >
+                Se connecter
+              </button>
+            </form>
+          </div>
+          <p class="text-center text-blue-200 text-sm mt-6">
+            © 2025 Plateforme Universitaire - Tous droits réservés
+          </p>
+        </div>
+      </div>
+      <!-- Page d'Inscription -->
+      <div
+        id="signup-page"
+        class="hidden min-h-full flex items-center justify-center bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 p-4"
+      >
+        <div class="w-full max-w-md fade-in">
+          <!-- Logo et Titre -->
+          <div class="text-center mb-8">
+            <div
+              class="inline-flex items-center justify-center w-20 h-20 bg-white rounded-2xl shadow-2xl mb-6"
+            >
+              <svg
+                class="w-12 h-12 text-blue-900"
+                fill="currentColor"
+                viewbox="0 0 24 24"
+              >
+                <path
+                  d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9zM17 15.99l-5 2.73-5-2.73v-3.72L12 15l5-2.73v3.72z"
+                />
+              </svg>
+            </div>
+            <h1 class="text-2xl font-bold text-white mb-2">Rejoignez-nous</h1>
+            <p class="text-blue-200">
+              Créez votre compte pour accéder à la plateforme
+            </p>
+          </div>
+          <!-- Formulaire d'Inscription -->
+          <div class="bg-white rounded-2xl shadow-2xl p-8">
+            <h3 class="text-xl font-semibold text-gray-800 mb-6 text-center">
+              Inscription
+            </h3>
+            <form onsubmit="handleSignup(event)" class="space-y-4">
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2"
+                    >Prénom</label
+                  >
+                  <input
+                    type="text"
+                    placeholder="Votre prénom"
+                    required
+                    class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                  />
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2"
+                    >Nom</label
+                  >
+                  <input
+                    type="text"
+                    placeholder="Votre nom"
+                    required
+                    class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                  />
+                </div>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2"
+                  >Adresse Email</label
+                >
+                <div class="relative">
+                  <span
+                    class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                  >
+                    <svg
+                      class="w-5 h-5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewbox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"
+                      /></svg
+                  ></span>
+                  <input
+                    type="email"
+                    placeholder="votre.email@univ.ma"
+                    required
+                    class="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                  />
+                </div>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2"
+                  >Mot de passe</label
+                >
+                <div class="relative">
+                  <span
+                    class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                  >
+                    <svg
+                      class="w-5 h-5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewbox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                      /></svg
+                  ></span>
+                  <input
+                    type="password"
+                    placeholder="••••••••"
+                    required
+                    class="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                  />
+                </div>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2"
+                  >Confirmer le mot de passe</label
+                >
+                <div class="relative">
+                  <span
+                    class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                  >
+                    <svg
+                      class="w-5 h-5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewbox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                      /></svg
+                  ></span>
+                  <input
+                    type="password"
+                    placeholder="••••••••"
+                    required
+                    class="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                  />
+                </div>
+              </div>
+              <button
+                type="submit"
+                class="w-full py-3 bg-gradient-to-r from-blue-900 to-blue-700 text-white font-semibold rounded-xl hover:from-blue-800 hover:to-blue-600 transition-all shadow-lg shadow-blue-900/30 btn-primary"
+              >
+                Créer mon compte
+              </button>
+              <p class="text-center text-sm text-gray-600 mt-4">
+                Déjà inscrit ?
+                <a
+                  href="#"
+                  onclick="hideSignupForm()"
+                  class="text-blue-600 hover:text-blue-700 font-medium"
+                  >Se connecter</a
+                >
+              </p>
+            </form>
+          </div>
+          <p class="text-center text-blue-200 text-sm mt-6">
+            © 2025 Plateforme Universitaire - Tous droits réservés
+          </p>
+        </div>
+      </div>
+      <!-- Dashboard Enseignant -->
+      <div id="teacher-dashboard" class="hidden h-full flex">
+        <!-- Sidebar -->
+        <aside
+          class="w-64 bg-gradient-to-b from-slate-900 to-blue-900 text-white flex flex-col flex-shrink-0"
+        >
+          <div class="p-6 border-b border-white/10">
+            <div class="flex items-center gap-3">
+              <div
+                class="w-10 h-10 bg-white rounded-xl flex items-center justify-center"
+              >
+                <svg
+                  class="w-6 h-6 text-blue-900"
+                  fill="currentColor"
+                  viewbox="0 0 24 24"
+                >
+                  <path
+                    d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3z"
+                  />
+                </svg>
+              </div>
+              <div>
+                <h1 class="font-bold text-sm">UniSalles</h1>
+                <p class="text-xs text-blue-200">Espace Enseignant</p>
+              </div>
+            </div>
+          </div>
+          <nav class="flex-1 p-4 space-y-1">
+            <a
+              href="#"
+              onclick="showTeacherSection('dashboard')"
+              class="sidebar-item active flex items-center gap-3 px-4 py-3 rounded-xl text-sm"
+            >
+              <svg
+                class="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewbox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"
+                />
+              </svg>
+              Tableau de bord
+            </a>
+            <a
+              href="#"
+              onclick="showTeacherSection('salles')"
+              class="sidebar-item flex items-center gap-3 px-4 py-3 rounded-xl text-sm"
+            >
+              <svg
+                class="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewbox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                />
+              </svg>
+              Liste des salles
+            </a>
+            <a
+              href="#"
+              onclick="showTeacherSection('reservations')"
+              class="sidebar-item flex items-center gap-3 px-4 py-3 rounded-xl text-sm"
+            >
+              <svg
+                class="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewbox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                />
+              </svg>
+              Mes réservations
+            </a>
+            <a
+              href="#"
+              onclick="showTeacherSection('reclamations')"
+              class="sidebar-item flex items-center gap-3 px-4 py-3 rounded-xl text-sm"
+            >
+              <svg
+                class="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewbox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              Réclamations
+            </a>
+            <a
+              href="#"
+              onclick="showTeacherSection('emploi')"
+              class="sidebar-item flex items-center gap-3 px-4 py-3 rounded-xl text-sm"
+            >
+              <svg
+                class="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewbox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+                />
+              </svg>
+              Emploi du temps
+            </a>
+            <a
+              href="#"
+              onclick="showTeacherSection('messages')"
+              class="sidebar-item flex items-center gap-3 px-4 py-3 rounded-xl text-sm"
+            >
+              <svg
+                class="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewbox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
+                />
+              </svg>
+              Messages étudiants
+            </a>
+          </nav>
+          <div class="p-4 border-t border-white/10">
+            <a
+              href="#"
+              onclick="logout()"
+              class="sidebar-item flex items-center gap-3 px-4 py-3 rounded-xl text-sm text-red-300 hover:bg-red-500/20"
+            >
+              <svg
+                class="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewbox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                />
+              </svg>
+              Déconnexion
+            </a>
+          </div>
+        </aside>
+        <!-- Main Content -->
+        <main class="flex-1 overflow-auto">
+          <!-- Header -->
+          <header
+            class="bg-white border-b border-gray-200 px-8 py-4 flex items-center justify-between sticky top-0 z-10"
+          >
+            <div>
+              <h2 class="text-xl font-bold text-gray-800">Tableau de bord</h2>
+              <p class="text-sm text-gray-500">Bienvenue, Prof. Ahmed Benali</p>
+            </div>
+            <div class="flex items-center gap-4">
+              <button
+                class="relative p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-xl transition-all"
+              >
+                <svg
+                  class="w-6 h-6"
+                  fill="none"
+                  stroke="currentColor"
+                  viewbox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
+                  /></svg
+                ><span
+                  class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full notification-badge"
+                ></span>
+              </button>
+              <div
+                class="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center"
+              >
+                <span class="text-blue-900 font-semibold">AB</span>
+              </div>
+            </div>
+          </header>
+          <!-- Dashboard Content -->
+          <div id="teacher-content" class="p-8">
+            <!-- Section Dashboard -->
+            <div id="section-dashboard" class="fade-in">
+              <!-- Stats Cards -->
+              <div
+                class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8"
+              >
+                <div
+                  class="bg-white rounded-2xl p-6 shadow-sm card-hover border border-gray-100"
+                >
+                  <div class="flex items-center justify-between mb-4">
+                    <div
+                      class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center"
+                    >
+                      <svg
+                        class="w-6 h-6 text-green-600"
+                        fill="none"
+                        stroke="currentColor"
+                        viewbox="0 0 24 24"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                        />
+                      </svg>
+                    </div>
+                    <span
+                      class="text-xs font-medium text-green-600 bg-green-50 px-2 py-1 rounded-lg"
+                      >Maintenant</span
+                    >
+                  </div>
+                  <h3 class="text-2xl font-bold text-gray-800">24</h3>
+                  <p class="text-sm text-gray-500">Salles disponibles</p>
+                </div>
+                <div
+                  class="bg-white rounded-2xl p-6 shadow-sm card-hover border border-gray-100"
+                >
+                  <div class="flex items-center justify-between mb-4">
+                    <div
+                      class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center"
+                    >
+                      <svg
+                        class="w-6 h-6 text-blue-600"
+                        fill="none"
+                        stroke="currentColor"
+                        viewbox="0 0 24 24"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                        />
+                      </svg>
+                    </div>
+                    <span
+                      class="text-xs font-medium text-blue-600 bg-blue-50 px-2 py-1 rounded-lg"
+                      >Cette semaine</span
+                    >
+                  </div>
+                  <h3 class="text-2xl font-bold text-gray-800">8</h3>
+                  <p class="text-sm text-gray-500">Mes réservations</p>
+                </div>
+                <div
+                  class="bg-white rounded-2xl p-6 shadow-sm card-hover border border-gray-100"
+                >
+                  <div class="flex items-center justify-between mb-4">
+                    <div
+                      class="w-12 h-12 bg-yellow-100 rounded-xl flex items-center justify-center"
+                    >
+                      <svg
+                        class="w-6 h-6 text-yellow-600"
+                        fill="none"
+                        stroke="currentColor"
+                        viewbox="0 0 24 24"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                        />
+                      </svg>
+                    </div>
+                    <span
+                      class="text-xs font-medium text-yellow-600 bg-yellow-50 px-2 py-1 rounded-lg"
+                      >En attente</span
+                    >
+                  </div>
+                  <h3 class="text-2xl font-bold text-gray-800">3</h3>
+                  <p class="text-sm text-gray-500">Demandes en cours</p>
+                </div>
+                <div
+                  class="bg-white rounded-2xl p-6 shadow-sm card-hover border border-gray-100"
+                >
+                  <div class="flex items-center justify-between mb-4">
+                    <div
+                      class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center"
+                    >
+                      <svg
+                        class="w-6 h-6 text-purple-600"
+                        fill="none"
+                        stroke="currentColor"
+                        viewbox="0 0 24 24"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"
+                        />
+                      </svg>
+                    </div>
+                    <span
+                      class="text-xs font-medium text-purple-600 bg-purple-50 px-2 py-1 rounded-lg"
+                      >Ce mois</span
+                    >
+                  </div>
+                  <h3 class="text-2xl font-bold text-gray-800">2</h3>
+                  <p class="text-sm text-gray-500">Réclamations envoyées</p>
+                </div>
+              </div>
+              <!-- Recent Activity & Quick Actions -->
+              <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Recent Reservations -->
+                <div
+                  class="lg:col-span-2 bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden"
+                >
+                  <div
+                    class="px-6 py-4 border-b border-gray-100 flex items-center justify-between"
+                  >
+                    <h3 class="font-semibold text-gray-800">
+                      Réservations récentes
+                    </h3>
+                    <a
+                      href="#"
+                      class="text-sm text-blue-600 hover:text-blue-700 font-medium"
+                      >Voir tout</a
+                    >
+                  </div>
+                  <div class="divide-y divide-gray-100">
+                    <div
+                      class="px-6 py-4 flex items-center justify-between hover:bg-gray-50 transition-all"
+                    >
+                      <div class="flex items-center gap-4">
+                        <div
+                          class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center"
+                        >
+                          <span class="text-blue-600 font-semibold text-sm"
+                            >I1</span
+                          >
+                        </div>
+                        <div>
+                          <p class="font-medium text-gray-800">
+                            Salle I1
+                          </p>
+                          <p class="text-sm text-gray-500">
+                            Aujourd'hui, 08:00 - 10:00
+                          </p>
+                        </div>
+                      </div>
+                      <span
+                        class="px-3 py-1 bg-blue-100 text-blue-700 text-xs font-medium rounded-full"
+                        >Réservée</span
+                      >
+                    </div>
+                    <div
+                      class="px-6 py-4 flex items-center justify-between hover:bg-gray-50 transition-all"
+                    >
+                      <div class="flex items-center gap-4">
+                        <div
+                          class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center"
+                        >
+                          <span class="text-purple-600 font-semibold text-sm"
+                            >A2</span
+                          >
+                        </div>
+                        <div>
+                          <p class="font-medium text-gray-800">Amphi 2</p>
+                          <p class="text-sm text-gray-500">
+                            Demain, 10:00 - 12:00
+                          </p>
+                        </div>
+                      </div>
+                      <span
+                        class="px-3 py-1 bg-blue-100 text-blue-700 text-xs font-medium rounded-full"
+                        >Réservée</span
+                      >
+                    </div>
+                    <div
+                      class="px-6 py-4 flex items-center justify-between hover:bg-gray-50 transition-all"
+                    >
+                      <div class="flex items-center gap-4">
+                        <div
+                          class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center"
+                        >
+                          <span class="text-green-600 font-semibold text-sm"
+                            >I3</span
+                          >
+                        </div>
+                        <div>
+                          <p class="font-medium text-gray-800">
+                            Salle I3
+                          </p>
+                          <p class="text-sm text-gray-500">
+                            Lundi, 14:00 - 16:00
+                          </p>
+                        </div>
+                      </div>
+                      <span
+                        class="px-3 py-1 bg-blue-100 text-blue-700 text-xs font-medium rounded-full"
+                        >Réservée</span
+                      >
+                    </div>
+                  </div>
+                </div>
+                <!-- Quick Actions -->
+                <div
+                  class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6"
+                >
+                  <h3 class="font-semibold text-gray-800 mb-4">
+                    Actions rapides
+                  </h3>
+                  <div class="space-y-3">
+                    <button
+                      onclick="showTeacherSection('salles')"
+                      class="w-full flex items-center gap-3 p-4 bg-blue-50 hover:bg-blue-100 rounded-xl transition-all group"
+                    >
+                      <div
+                        class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform"
+                      >
+                        <svg
+                          class="w-5 h-5 text-white"
+                          fill="none"
+                          stroke="currentColor"
+                          viewbox="0 0 24 24"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                          />
+                        </svg>
+                      </div>
+                      <span class="font-medium text-gray-800"
+                        >Réserver une salle</span
+                      >
+                    </button>
+                    <button
+                      onclick="showTeacherSection('reclamations')"
+                      class="w-full flex items-center gap-3 p-4 bg-purple-50 hover:bg-purple-100 rounded-xl transition-all group"
+                    >
+                      <div
+                        class="w-10 h-10 bg-purple-600 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform"
+                      >
+                        <svg
+                          class="w-5 h-5 text-white"
+                          fill="none"
+                          stroke="currentColor"
+                          viewbox="0 0 24 24"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"
+                          />
+                        </svg>
+                      </div>
+                      <span class="font-medium text-gray-800"
+                        >Envoyer réclamation</span
+                      >
+                    </button>
+                    <button
+                      onclick="showTeacherSection('emploi')"
+                      class="w-full flex items-center gap-3 p-4 bg-green-50 hover:bg-green-100 rounded-xl transition-all group"
+                    >
+                      <div
+                        class="w-10 h-10 bg-green-600 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform"
+                      >
+                        <svg
+                          class="w-5 h-5 text-white"
+                          fill="none"
+                          stroke="currentColor"
+                          viewbox="0 0 24 24"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+                          />
+                        </svg>
+                      </div>
+                      <span class="font-medium text-gray-800"
+                        >Voir emploi du temps</span
+                      >
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Section Salles -->
+            <div id="section-salles" class="hidden fade-in">
+              <!-- Titre -->
+              <div class="flex items-center justify-between mb-4">
+                <div>
+                  <h3 class="text-xl font-bold text-gray-800">Liste des salles</h3>
+                  <p class="text-sm text-gray-500">Consultez et réservez les salles disponibles</p>
+                </div>
+                <button
+                  onclick="toggleFiltres()"
+                  id="btn-filtres"
+                  class="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-xl hover:bg-blue-700 transition-all"
+                >
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707L13 13.414V19a1 1 0 01-.553.894l-4 2A1 1 0 017 21v-7.586L3.293 6.707A1 1 0 013 6V4z"/>
+                  </svg>
+                  Filtres avancés
+                  <span id="filtre-count" class="hidden bg-white text-blue-600 text-xs font-bold px-1.5 py-0.5 rounded-full">0</span>
+                </button>
+              </div>
+
+              <!-- Panneau de filtres -->
+              <div id="panneau-filtres" class="hidden mb-5">
+                <div class="bg-white rounded-2xl shadow-sm border border-blue-100 p-5">
+                  <div class="flex items-center gap-2 mb-4 pb-3 border-b border-gray-100">
+                    <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707L13 13.414V19a1 1 0 01-.553.894l-4 2A1 1 0 017 21v-7.586L3.293 6.707A1 1 0 013 6V4z"/>
+                    </svg>
+                    <h4 class="font-semibold text-gray-800">Critères de recherche</h4>
+                  </div>
+
+                  <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5">
+
+                    <!-- Filtre 1 : Département -->
+                    <div>
+                      <label class="flex items-center gap-1.5 text-sm font-medium text-gray-700 mb-2">
+                        <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5"/>
+                        </svg>
+                        Département
+                      </label>
+                      <select id="filtre-dept" class="w-full px-3 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none text-sm bg-gray-50">
+                        <option value="">Tous les départements</option>
+                        <option value="informatique">Informatique</option>
+                        <option value="mathematiques">Mathématiques</option>
+                        <option value="physique">Physique</option>
+                        <option value="gestion">Gestion</option>
+                        <option value="electronique">Électronique</option>
+                      </select>
+                    </div>
+
+                    <!-- Filtre 2 : Matériaux souhaités -->
+                    <div>
+                      <label class="flex items-center gap-1.5 text-sm font-medium text-gray-700 mb-2">
+                        <svg class="w-4 h-4 text-purple-500" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18"/>
+                        </svg>
+                        Matériaux souhaités
+                      </label>
+                      <div class="flex flex-col gap-2 px-3 py-2.5 border border-gray-200 rounded-xl bg-gray-50">
+                        <label class="flex items-center gap-2 cursor-pointer">
+                          <input type="checkbox" id="mat-projecteur" value="projecteur" onchange="appliquerFiltres()" class="accent-blue-600 w-3.5 h-3.5"/>
+                          <span class="text-xs text-gray-700">🖥 Projecteur</span>
+                        </label>
+                        <label class="flex items-center gap-2 cursor-pointer">
+                          <input type="checkbox" id="mat-pcs" value="pcs" onchange="appliquerFiltres()" class="accent-blue-600 w-3.5 h-3.5"/>
+                          <span class="text-xs text-gray-700">💻 PCs</span>
+                        </label>
+                        <label class="flex items-center gap-2 cursor-pointer">
+                          <input type="checkbox" id="mat-tableau" value="tableau" onchange="appliquerFiltres()" class="accent-blue-600 w-3.5 h-3.5"/>
+                          <span class="text-xs text-gray-700">📋 Tableau</span>
+                        </label>
+                        <label class="flex items-center gap-2 cursor-pointer">
+                          <input type="checkbox" id="mat-micro" value="micro" onchange="appliquerFiltres()" class="accent-blue-600 w-3.5 h-3.5"/>
+                          <span class="text-xs text-gray-700">🎙 Micro</span>
+                        </label>
+                      </div>
+                    </div>
+
+                    <!-- Filtre 3 : Temps souhaité -->
+                    <div>
+                      <label class="flex items-center gap-1.5 text-sm font-medium text-gray-700 mb-2">
+                        <svg class="w-4 h-4 text-orange-500" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        Heure souhaitée
+                      </label>
+                      <select id="filtre-temps" onchange="appliquerFiltres()" class="w-full px-3 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none text-sm bg-gray-50">
+                        <option value="">N'importe quelle heure</option>
+                        <option value="08:00">08:00</option>
+                        <option value="09:00">09:00</option>
+                        <option value="10:00">10:00</option>
+                        <option value="11:00">11:00</option>
+                        <option value="12:00">12:00</option>
+                        <option value="13:00">13:00</option>
+                        <option value="14:00">14:00</option>
+                        <option value="15:00">15:00</option>
+                        <option value="16:00">16:00</option>
+                        <option value="17:00">17:00</option>
+                      </select>
+                    </div>
+
+                    <!-- Filtre 4 : Durée -->
+                    <div>
+                      <label class="flex items-center gap-1.5 text-sm font-medium text-gray-700 mb-2">
+                        <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        Durée souhaitée
+                      </label>
+                      <select id="filtre-duree" onchange="appliquerFiltres()" class="w-full px-3 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none text-sm bg-gray-50">
+                        <option value="">N'importe quelle durée</option>
+                        <option value="1">1 heure</option>
+                        <option value="1.5">1h30</option>
+                        <option value="2">2 heures</option>
+                        <option value="3">3 heures</option>
+                        <option value="4">4 heures</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <!-- Barre de résultats + boutons -->
+                  <div class="flex items-center justify-between mt-4 pt-3 border-t border-gray-100">
+                    <p id="filtre-result-text" class="text-sm text-gray-500">
+                      <span id="filtre-count-label">4</span> salle(s) affichée(s)
+                    </p>
+                    <div class="flex gap-2">
+                      <button
+                        onclick="reinitialiserFiltres()"
+                        class="px-4 py-2 text-sm text-gray-600 border border-gray-200 rounded-xl hover:bg-gray-50 transition-all"
+                      >
+                        ↺ Réinitialiser
+                      </button>
+                      <button
+                        onclick="appliquerFiltres()"
+                        class="px-4 py-2 text-sm bg-blue-600 text-white font-medium rounded-xl hover:bg-blue-700 transition-all"
+                      >
+                        ✓ Appliquer
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden"
+              >
+                <div class="overflow-x-auto">
+                  <table class="w-full">
+                    <thead class="bg-gray-50">
+                      <tr>
+                        <th
+                          class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider"
+                        >
+                          Salle
+                        </th>
+                        <th
+                          class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider"
+                        >
+                          Département
+                        </th>
+                        <th
+                          class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider"
+                        >
+                          Capacité
+                        </th>
+                        <th
+                          class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider"
+                        >
+                          Équipement
+                        </th>
+                        <th
+                          class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider"
+                        >
+                          Statut
+                        </th>
+                        <th
+                          class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider"
+                        >
+                          Temps
+                        </th>
+                        <th
+                          class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider"
+                        >
+                          Action
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100">
+                      <tr id="row-I1" class="hover:bg-gray-50 transition-all">
+                        <td class="px-6 py-4">
+                          <div class="flex items-center gap-3">
+                            <div
+                              class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center"
+                            >
+                              <span class="text-blue-600 font-semibold text-sm"
+                                >I1</span
+                              >
+                            </div>
+                            <div>
+                              <p class="font-medium text-gray-800">I1</p>
+                              <p class="text-xs text-gray-500">
+                                Bâtiment Principal - RDC
+                              </p>
+                            </div>
+                          </div>
+                        </td>
+                        <td class="px-6 py-4 text-sm text-gray-600">
+                          Informatique
+                        </td>
+                        <td class="px-6 py-4 text-sm text-gray-600">
+                          30 places
+                        </td>
+                        <td class="px-6 py-4">
+                          <div class="flex gap-1">
+                            <span
+                              class="px-2 py-1 bg-blue-50 text-blue-600 text-xs rounded"
+                              >Projecteur</span
+                            >
+                            <span
+                              class="px-2 py-1 bg-orange-50 text-orange-600 text-xs rounded"
+                              >PCs</span
+                            >
+                          </div>
+                        </td>
+                        <td class="px-6 py-4">
+                          <span
+                            class="px-3 py-1 bg-green-100 text-green-700 text-xs font-medium rounded-full"
+                            >Disponible</span
+                          >
+                        </td>
+                        <td class="px-6 py-4">
+                          <div class="flex items-center gap-1 text-green-600">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                            <span class="text-xs font-semibold">Maintenant</span>
+                          </div>
+                        </td>
+                        <td class="px-6 py-4">
+                          <button
+                            onclick="openReservationModal('I1')"
+                            class="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-all"
+                          >
+                            Réserver
+                          </button>
+                        </td>
+                      </tr>
+                      <tr id="row-I5" class="hover:bg-gray-50 transition-all">
+                        <td class="px-6 py-4">
+                          <div class="flex items-center gap-3">
+                            <div
+                              class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center"
+                            >
+                              <span
+                                class="text-purple-600 font-semibold text-sm"
+                                >I5</span
+                              >
+                            </div>
+                            <div>
+                              <p class="font-medium text-gray-800">I5</p>
+                              <p class="text-xs text-gray-500">
+                                Bâtiment Principal - 1er étage
+                              </p>
+                            </div>
+                          </div>
+                        </td>
+                        <td class="px-6 py-4 text-sm text-gray-600">
+                          Informatique
+                        </td>
+                        <td class="px-6 py-4 text-sm text-gray-600">
+                          25 places
+                        </td>
+                        <td class="px-6 py-4">
+                          <div class="flex gap-1">
+                            <span
+                              class="px-2 py-1 bg-blue-50 text-blue-600 text-xs rounded"
+                              >Projecteur</span
+                            >
+                            <span
+                              class="px-2 py-1 bg-purple-50 text-purple-600 text-xs rounded"
+                              >Tableau</span
+                            >
+                          </div>
+                        </td>
+                        <td class="px-6 py-4">
+                          <span
+                            class="px-3 py-1 bg-red-100 text-red-700 text-xs font-medium rounded-full"
+                            >Occupée</span
+                          >
+                        </td>
+                        <td class="px-6 py-4">
+                          <div class="flex flex-col gap-0.5">
+                            <div class="flex items-center gap-1 text-gray-500">
+                              <svg class="w-3 h-3" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                              </svg>
+                              <span class="text-xs font-medium text-gray-700">26/03/2025</span>
+                            </div>
+                            <span class="text-xs text-red-500 font-semibold">08:00 &rarr; 10:00</span>
+                          </div>
+                        </td>
+                        <td class="px-6 py-4">
+                          <button
+                            disabled
+                            class="px-4 py-2 bg-gray-200 text-gray-500 text-sm font-medium rounded-lg cursor-not-allowed"
+                          >
+                            Indisponible
+                          </button>
+                        </td>
+                      </tr>
+                      <tr id="row-I8" class="hover:bg-gray-50 transition-all">
+                        <td class="px-6 py-4">
+                          <div class="flex items-center gap-3">
+                            <div
+                              class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center"
+                            >
+                              <span class="text-green-600 font-semibold text-sm"
+                                >I8</span
+                              >
+                            </div>
+                            <div>
+                              <p class="font-medium text-gray-800">I8</p>
+                              <p class="text-xs text-gray-500">
+                                Bâtiment Principal - 2ème étage
+                              </p>
+                            </div>
+                          </div>
+                        </td>
+                        <td class="px-6 py-4 text-sm text-gray-600">
+                          Informatique
+                        </td>
+                        <td class="px-6 py-4 text-sm text-gray-600">
+                          28 places
+                        </td>
+                        <td class="px-6 py-4">
+                          <div class="flex gap-1">
+                            <span
+                              class="px-2 py-1 bg-orange-50 text-orange-600 text-xs rounded"
+                              >PCs</span
+                            >
+                            <span
+                              class="px-2 py-1 bg-blue-50 text-blue-600 text-xs rounded"
+                              >Projecteur</span
+                            >
+                          </div>
+                        </td>
+                        <td class="px-6 py-4">
+                          <span
+                            class="px-3 py-1 bg-green-100 text-green-700 text-xs font-medium rounded-full"
+                            >Disponible</span
+                          >
+                        </td>
+                        <td class="px-6 py-4">
+                          <div class="flex items-center gap-1 text-green-600">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                            <span class="text-xs font-semibold">Maintenant</span>
+                          </div>
+                        </td>
+                        <td class="px-6 py-4">
+                          <button
+                            onclick="openReservationModal('I8')"
+                            class="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-all"
+                          >
+                            Réserver
+                          </button>
+                        </td>
+                      </tr>
+                      <tr id="row-Amphi2" class="hover:bg-gray-50 transition-all">
+                        <td class="px-6 py-4">
+                          <div class="flex items-center gap-3">
+                            <div
+                              class="w-10 h-10 bg-yellow-100 rounded-lg flex items-center justify-center"
+                            >
+                              <span
+                                class="text-yellow-600 font-semibold text-sm"
+                                >A2</span
+                              >
+                            </div>
+                            <div>
+                              <p class="font-medium text-gray-800">Amphi 2</p>
+                              <p class="text-xs text-gray-500">
+                                Bâtiment Amphithéâtres - RDC
+                              </p>
+                            </div>
+                          </div>
+                        </td>
+                        <td class="px-6 py-4 text-sm text-gray-600">
+                          Informatique
+                        </td>
+                        <td class="px-6 py-4 text-sm text-gray-600">
+                          150 places
+                        </td>
+                        <td class="px-6 py-4">
+                          <div class="flex gap-1">
+                            <span
+                              class="px-2 py-1 bg-blue-50 text-blue-600 text-xs rounded"
+                              >Projecteur</span
+                            >
+                            <span
+                              class="px-2 py-1 bg-green-50 text-green-600 text-xs rounded"
+                              >Micro</span
+                            >
+                          </div>
+                        </td>
+                        <td class="px-6 py-4">
+                          <span
+                            class="px-3 py-1 bg-red-100 text-red-700 text-xs font-medium rounded-full"
+                            >Occupée</span
+                          >
+                        </td>
+                        <td class="px-6 py-4">
+                          <div class="flex flex-col gap-0.5">
+                            <div class="flex items-center gap-1 text-gray-500">
+                              <svg class="w-3 h-3" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                              </svg>
+                              <span class="text-xs font-medium text-gray-700">26/03/2025</span>
+                            </div>
+                            <span class="text-xs text-red-500 font-semibold">10:00 &rarr; 12:00</span>
+                          </div>
+                        </td>
+                        <td class="px-6 py-4">
+                          <button
+                            disabled
+                            class="px-4 py-2 bg-gray-200 text-gray-500 text-sm font-medium rounded-lg cursor-not-allowed"
+                          >
+                            Indisponible
+                          </button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <!-- Section Réservations -->
+            <div id="section-reservations" class="hidden fade-in">
+              <div class="flex items-center justify-between mb-6">
+                <div>
+                  <h3 class="text-xl font-bold text-gray-800">
+                    Mes réservations
+                  </h3>
+                  <p class="text-sm text-gray-500">
+                    Vos réservations de salles confirmées automatiquement
+                  </p>
+                </div>
+                <button
+                  onclick="openReservationModal('')"
+                  class="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-xl hover:bg-blue-700 transition-all flex items-center gap-2"
+                >
+                  <svg
+                    class="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewbox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                    />
+                  </svg>
+                  Nouvelle réservation
+                </button>
+              </div>
+              <div class="grid gap-4">
+                <div
+                  class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex items-center justify-between"
+                >
+                  <div class="flex items-center gap-4">
+                    <div
+                      class="w-14 h-14 bg-green-100 rounded-xl flex items-center justify-center"
+                    >
+                      <svg
+                        class="w-7 h-7 text-green-600"
+                        fill="none"
+                        stroke="currentColor"
+                        viewbox="0 0 24 24"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                        />
+                      </svg>
+                    </div>
+                    <div>
+                      <h4 class="font-semibold text-gray-800">Amphi A1</h4>
+                      <p class="text-sm text-gray-500">
+                        Lundi 15 Janvier • 10:00 - 12:00
+                      </p>
+                      <p class="text-xs text-gray-400 mt-1">
+                        Algorithmique - Groupe A
+                      </p>
+                    </div>
+                  </div>
+                  <div class="flex items-center gap-3">
+                    <span
+                      class="px-4 py-2 bg-green-100 text-green-700 text-sm font-medium rounded-full"
+                      >Confirmée</span
+                    >
+                    <button
+                      class="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all"
+                    >
+                      <svg
+                        class="w-5 h-5"
+                        fill="none"
+                        stroke="currentColor"
+                        viewbox="0 0 24 24"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+                <div
+                  class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex items-center justify-between"
+                >
+                  <div class="flex items-center gap-4">
+                    <div
+                      class="w-14 h-14 bg-green-100 rounded-xl flex items-center justify-center"
+                    >
+                      <svg
+                        class="w-7 h-7 text-green-600"
+                        fill="none"
+                        stroke="currentColor"
+                        viewbox="0 0 24 24"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                        />
+                      </svg>
+                    </div>
+                    <div>
+                      <h4 class="font-semibold text-gray-800">Salle TP C2</h4>
+                      <p class="text-sm text-gray-500">
+                        Mardi 16 Janvier • 14:00 - 16:00
+                      </p>
+                      <p class="text-xs text-gray-400 mt-1">
+                        Programmation Web - Groupe B
+                      </p>
+                    </div>
+                  </div>
+                  <div class="flex items-center gap-3">
+                    <span
+                      class="px-4 py-2 bg-green-100 text-green-700 text-sm font-medium rounded-full"
+                      >Confirmée</span
+                    >
+                    <button
+                      class="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all"
+                    >
+                      <svg
+                        class="w-5 h-5"
+                        fill="none"
+                        stroke="currentColor"
+                        viewbox="0 0 24 24"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+                <div
+                  class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex items-center justify-between"
+                >
+                  <div class="flex items-center gap-4">
+                    <div
+                      class="w-14 h-14 bg-green-100 rounded-xl flex items-center justify-center"
+                    >
+                      <svg
+                        class="w-7 h-7 text-green-600"
+                        fill="none"
+                        stroke="currentColor"
+                        viewbox="0 0 24 24"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                        />
+                      </svg>
+                    </div>
+                    <div>
+                      <h4 class="font-semibold text-gray-800">Salle B3</h4>
+                      <p class="text-sm text-gray-500">
+                        Mercredi 10 Janvier • 08:00 - 10:00
+                      </p>
+                      <p class="text-xs text-gray-400 mt-1">
+                        Base de données - Groupe A
+                      </p>
+                    </div>
+                  </div>
+                  <div class="flex items-center gap-3">
+                    <span
+                      class="px-4 py-2 bg-green-100 text-green-700 text-sm font-medium rounded-full"
+                      >Confirmée</span
+                    >
+                    <button
+                      class="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all"
+                    >
+                      <svg
+                        class="w-5 h-5"
+                        fill="none"
+                        stroke="currentColor"
+                        viewbox="0 0 24 24"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Section Réclamations -->
+            <div id="section-reclamations" class="hidden fade-in">
+              <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Formulaire -->
+                <div
+                  class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6"
+                >
+                  <h3 class="font-semibold text-gray-800 mb-6">
+                    Nouvelle réclamation
+                  </h3>
+                  <form onsubmit="submitReclamation(event)" class="space-y-4">
+                    <div>
+                      <label
+                        class="block text-sm font-medium text-gray-700 mb-2"
+                        >Type de réclamation</label
+                      >
+                      <select
+                        id="reclamation-type"
+                        class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"
+                      >
+                        <option value="materiel">Problème matériel</option>
+                        <option value="salle">Problème de salle</option>
+                        <option value="autre">Autre</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label
+                        class="block text-sm font-medium text-gray-700 mb-2"
+                        >Salle concernée</label
+                      >
+                      <select
+                        class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"
+                      >
+                        <option>I1</option>
+                        <option>I2</option>
+                        <option>I3</option>
+                        <option>I4</option>
+                        <option>I5</option>
+                        <option>I6</option>
+                        <option>I7</option>
+                        <option>I8</option>
+                        <option>I9</option>
+                        <option>I10</option>
+                        <option>I11</option>
+                        <option>I12</option>
+                        <option>Amphi 1</option>
+                        <option>Amphi 2</option>
+                        <option>Amphi 3</option>
+                        <option>Amphi 4</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label
+                        class="block text-sm font-medium text-gray-700 mb-2"
+                        >Description</label
+                      >
+                      <textarea
+                        rows="4"
+                        placeholder="Décrivez votre problème en détail..."
+                        class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none resize-none"
+                      ></textarea>
+                    </div>
+                    <button
+                      type="submit"
+                      class="w-full py-3 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 transition-all"
+                    >
+                      Envoyer la réclamation
+                    </button>
+                  </form>
+                </div>
+                <!-- Historique -->
+                <div
+                  class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6"
+                >
+                  <h3 class="font-semibold text-gray-800 mb-6">
+                    Historique des réclamations
+                  </h3>
+                  <div class="space-y-4">
+                    <div class="p-4 bg-gray-50 rounded-xl">
+                      <div class="flex items-center justify-between mb-2">
+                        <span class="text-sm font-medium text-gray-800"
+                          >Problème matériel - Salle TP C2</span
+                        >
+                        <span
+                          class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full"
+                          >Résolu</span
+                        >
+                      </div>
+                      <p class="text-sm text-gray-600 mb-2">
+                        Le projecteur ne fonctionne pas depuis ce matin.
+                      </p>
+                      <p class="text-xs text-gray-400">
+                        Envoyé le 12 Janvier 2025
+                      </p>
+                    </div>
+                    <div class="p-4 bg-gray-50 rounded-xl">
+                      <div class="flex items-center justify-between mb-2">
+                        <span class="text-sm font-medium text-gray-800"
+                          >Absence - Amphi A1</span
+                        >
+                        <span
+                          class="px-2 py-1 bg-yellow-100 text-yellow-700 text-xs rounded-full"
+                          >En cours</span
+                        >
+                      </div>
+                      <p class="text-sm text-gray-600 mb-2">
+                        Signalement d'absence pour le cours de 14h.
+                      </p>
+                      <p class="text-xs text-gray-400">
+                        Envoyé le 10 Janvier 2025
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Section Messages Étudiants -->
+            <div id="section-messages" class="hidden fade-in">
+              <h3 class="text-xl font-bold text-gray-800 mb-6">
+                Envoyer un message aux étudiants
+              </h3>
+              <div
+                class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 max-w-2xl"
+              >
+                <form onsubmit="submitMessageTeacher(event)" class="space-y-4">
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2"
+                      >Classe concernée</label
+                    >
+                    <select
+                      class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none bg-gray-50"
+                    >
+                      <option value="" disabled selected>-- Sélectionnez une classe --</option>
+                      <optgroup label="Licence">
+                        <option value="L1-INFO">1ère Licence Informatique</option>
+                        <option value="L2-INFO">2ème Licence Informatique</option>
+                        <option value="L3-INFO">3ème Licence Informatique</option>
+                        <option value="L1-TIC">1ère Licence TIC</option>
+                        <option value="L2-TIC">2ème Licence TIC</option>
+                        <option value="L3-TIC">3ème Licence TIC</option>
+                      </optgroup>
+                      <optgroup label="Mastère">
+                        <option value="M1-GL">Mastère 1 Génie Logiciel</option>
+                        <option value="M2-GL">Mastère 2 Génie Logiciel</option>
+                        <option value="M1-RSI">Mastère 1 RSI</option>
+                        <option value="M2-RSI">Mastère 2 RSI</option>
+                      </optgroup>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2"
+                      >Groupe(s)</label
+                    >
+                    <div class="grid grid-cols-2 gap-3">
+                      <label class="flex items-center gap-3 p-3 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-blue-300 transition-all msg-group-checkbox-label">
+                        <input type="checkbox" name="groupe_msg" value="1" class="accent-blue-600 w-4 h-4" onchange="updateMessageGroupeStyle(this)" />
+                        <span class="text-sm font-medium text-gray-700">&#128101; Groupe 1</span>
+                      </label>
+                      <label class="flex items-center gap-3 p-3 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-blue-300 transition-all msg-group-checkbox-label">
+                        <input type="checkbox" name="groupe_msg" value="2" class="accent-blue-600 w-4 h-4" onchange="updateMessageGroupeStyle(this)" />
+                        <span class="text-sm font-medium text-gray-700">&#128101; Groupe 2</span>
+                      </label>
+                    </div>
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2"
+                      >Type de notification</label
+                    >
+                    <select
+                      class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"
+                    >
+                      <option>Information générale</option>
+                      <option>Changement de salle</option>
+                      <option>Changement d'horaire</option>
+                      <option>Annulation de cours</option>
+                      <option>Rattrapage</option>
+                      <option value="absence">Absence d'un enseignant</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2"
+                      >Message</label
+                    >
+                    <textarea
+                      rows="4"
+                      placeholder="Rédigez votre message aux étudiants..."
+                      class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none resize-none"
+                    ></textarea>
+                  </div>
+                  <button
+                    type="submit"
+                    class="px-6 py-3 bg-blue-600 text-white font-medium rounded-xl hover:bg-blue-700 transition-all"
+                  >
+                    Envoyer le message
+                  </button>
+                </form>
+              </div>
+            </div>
+            <!-- Section Emploi du temps -->
+            <div id="section-emploi" class="hidden fade-in">
+              <div
+                class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden"
+              >
+                <div
+                  class="px-6 py-4 border-b border-gray-100 flex items-center justify-between"
+                >
+                  <h3 class="font-semibold text-gray-800">
+                    Mon emploi du temps - Semaine du 15 Janvier
+                  </h3>
+                  <div class="flex items-center gap-2">
+                    <button
+                      class="p-2 hover:bg-gray-100 rounded-lg transition-all"
+                    >
+                      <svg
+                        class="w-5 h-5 text-gray-600"
+                        fill="none"
+                        stroke="currentColor"
+                        viewbox="0 0 24 24"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M15 19l-7-7 7-7"
+                        />
+                      </svg>
+                    </button>
+                    <button
+                      class="p-2 hover:bg-gray-100 rounded-lg transition-all"
+                    >
+                      <svg
+                        class="w-5 h-5 text-gray-600"
+                        fill="none"
+                        stroke="currentColor"
+                        viewbox="0 0 24 24"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M9 5l7 7-7 7"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+                <div class="grid grid-cols-7 divide-x divide-gray-100">
+                  <div
+                    class="p-4 bg-gray-50 font-medium text-sm text-gray-500"
+                  ></div>
+                  <div
+                    class="p-4 bg-gray-50 font-medium text-sm text-gray-600 text-center"
+                  >
+                    Lundi
+                  </div>
+                  <div
+                    class="p-4 bg-gray-50 font-medium text-sm text-gray-600 text-center"
+                  >
+                    Mardi
+                  </div>
+                  <div
+                    class="p-4 bg-gray-50 font-medium text-sm text-gray-600 text-center"
+                  >
+                    Mercredi
+                  </div>
+                  <div
+                    class="p-4 bg-gray-50 font-medium text-sm text-gray-600 text-center"
+                  >
+                    Jeudi
+                  </div>
+                  <div
+                    class="p-4 bg-gray-50 font-medium text-sm text-gray-600 text-center"
+                  >
+                    Vendredi
+                  </div>
+                  <div
+                    class="p-4 bg-gray-50 font-medium text-sm text-gray-600 text-center"
+                  >
+                    Samedi
+                  </div>
+                </div>
+                <div
+                  class="grid grid-cols-7 divide-x divide-gray-100 border-t border-gray-100"
+                >
+                  <div class="p-4 text-sm text-gray-500 font-medium">
+                    08:30 - 10:00
+                  </div>
+                  <div class="p-2">
+                    <div class="p-3 bg-blue-100 rounded-lg">
+                      <p class="text-xs font-semibold text-blue-800">
+                        Algorithmique
+                      </p>
+                      <p class="text-xs text-blue-600">Salle A1</p>
+                    </div>
+                  </div>
+                  <div class="p-2"></div>
+                  <div class="p-2">
+                    <div class="p-3 bg-purple-100 rounded-lg">
+                      <p class="text-xs font-semibold text-purple-800">
+                        Base de données
+                      </p>
+                      <p class="text-xs text-purple-600">Salle B3</p>
+                    </div>
+                  </div>
+                  <div class="p-2"></div>
+                  <div class="p-2">
+                    <div class="p-3 bg-green-100 rounded-lg">
+                      <p class="text-xs font-semibold text-green-800">
+                        Prog. Web
+                      </p>
+                      <p class="text-xs text-green-600">Salle C2</p>
+                    </div>
+                  </div>
+                  <div class="p-2"></div>
+                </div>
+                <div
+                  class="grid grid-cols-7 divide-x divide-gray-100 border-t border-gray-100"
+                >
+                  <div class="p-4 text-sm text-gray-500 font-medium">
+                    10:00 - 11:30
+                  </div>
+                  <div class="p-2"></div>
+                  <div class="p-2">
+                    <div class="p-3 bg-orange-100 rounded-lg">
+                      <p class="text-xs font-semibold text-orange-800">
+                        Réseaux
+                      </p>
+                      <p class="text-xs text-orange-600">Amphi A1</p>
+                    </div>
+                  </div>
+                  <div class="p-2"></div>
+                  <div class="p-2">
+                    <div class="p-3 bg-blue-100 rounded-lg">
+                      <p class="text-xs font-semibold text-blue-800">
+                        Algorithmique
+                      </p>
+                      <p class="text-xs text-blue-600">Salle A1</p>
+                    </div>
+                  </div>
+                  <div class="p-2"></div>
+                  <div class="p-2">
+                    <div class="p-3 bg-red-100 rounded-lg">
+                      <p class="text-xs font-semibold text-red-800">
+                        Rattrapage Algo
+                      </p>
+                      <p class="text-xs text-red-600">Salle I3</p>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="grid grid-cols-7 divide-x divide-gray-100 border-t border-gray-100"
+                >
+                  <div class="p-4 text-sm text-gray-500 font-medium">
+                    11:30 - 13:00
+                  </div>
+                  <div class="p-2">
+                    <div class="p-3 bg-teal-100 rounded-lg">
+                      <p class="text-xs font-semibold text-teal-800">
+                        Systèmes
+                      </p>
+                      <p class="text-xs text-teal-600">Salle I5</p>
+                    </div>
+                  </div>
+                  <div class="p-2"></div>
+                  <div class="p-2"></div>
+                  <div class="p-2"></div>
+                  <div class="p-2">
+                    <div class="p-3 bg-orange-100 rounded-lg">
+                      <p class="text-xs font-semibold text-orange-800">
+                        Réseaux TD
+                      </p>
+                      <p class="text-xs text-orange-600">Salle I2</p>
+                    </div>
+                  </div>
+                  <div class="p-2"></div>
+                </div>
+                <div
+                  class="grid grid-cols-7 divide-x divide-gray-100 border-t border-gray-100"
+                >
+                  <div class="p-4 text-sm text-gray-500 font-medium">
+                    14:00 - 15:30
+                  </div>
+                  <div class="p-2">
+                    <div class="p-3 bg-green-100 rounded-lg">
+                      <p class="text-xs font-semibold text-green-800">
+                        TP Prog. Web
+                      </p>
+                      <p class="text-xs text-green-600">Salle C2</p>
+                    </div>
+                  </div>
+                  <div class="p-2"></div>
+                  <div class="p-2">
+                    <div class="p-3 bg-purple-100 rounded-lg">
+                      <p class="text-xs font-semibold text-purple-800">
+                        TD BDD
+                      </p>
+                      <p class="text-xs text-purple-600">Salle B3</p>
+                    </div>
+                  </div>
+                  <div class="p-2"></div>
+                  <div class="p-2"></div>
+                  <div class="p-2"></div>
+                </div>
+                <div
+                  class="grid grid-cols-7 divide-x divide-gray-100 border-t border-gray-100"
+                >
+                  <div class="p-4 text-sm text-gray-500 font-medium">
+                    15:30 - 17:00
+                  </div>
+                  <div class="p-2"></div>
+                  <div class="p-2">
+                    <div class="p-3 bg-indigo-100 rounded-lg">
+                      <p class="text-xs font-semibold text-indigo-800">
+                        TP Systèmes
+                      </p>
+                      <p class="text-xs text-indigo-600">Salle I8</p>
+                    </div>
+                  </div>
+                  <div class="p-2"></div>
+                  <div class="p-2"></div>
+                  <div class="p-2"></div>
+                  <div class="p-2"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
+        <!-- Chatbot Button -->
+        <button
+          onclick="toggleChatbot()"
+          class="fixed bottom-6 right-6 w-14 h-14 bg-blue-600 text-white rounded-full shadow-lg flex items-center justify-center chatbot-bubble hover:bg-blue-700 transition-all z-50"
+        >
+          <svg
+            class="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewbox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+            />
+          </svg>
+        </button>
+        <!-- Chatbot Window -->
+        <div
+          id="chatbot-window"
+          class="hidden fixed bottom-24 right-6 w-80 bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden z-50"
+        >
+          <div
+            class="bg-gradient-to-r from-blue-600 to-blue-700 p-4 flex items-center justify-between"
+          >
+            <div class="flex items-center gap-3">
+              <div
+                class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center"
+              >
+                <svg
+                  class="w-4 h-4 text-white"
+                  fill="currentColor"
+                  viewbox="0 0 24 24"
+                >
+                  <path
+                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
+                  />
+                </svg>
+              </div>
+              <div>
+                <p class="text-white font-semibold text-sm">
+                  Assistant UniSalles
+                </p>
+                <p class="text-blue-100 text-xs">En ligne</p>
+              </div>
+            </div>
+            <button
+              onclick="toggleChatbot()"
+              class="text-white/80 hover:text-white"
+            >
+              <svg
+                class="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewbox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+          </div>
+          <div class="h-64 p-4 overflow-y-auto space-y-3">
+            <div class="flex gap-2">
+              <div
+                class="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0"
+              >
+                <svg
+                  class="w-3 h-3 text-blue-600"
+                  fill="currentColor"
+                  viewbox="0 0 24 24"
+                >
+                  <path
+                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"
+                  />
+                </svg>
+              </div>
+              <div
+                class="bg-gray-100 rounded-2xl rounded-tl-sm px-4 py-2 max-w-[200px]"
+              >
+                <p class="text-sm text-gray-700">
+                  Bonjour ! Comment puis-je vous aider ?
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="p-4 border-t border-gray-100">
+            <div class="flex gap-2">
+              <input
+                type="text"
+                placeholder="Tapez votre message..."
+                class="flex-1 px-4 py-2 border border-gray-200 rounded-full text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+              />
+              <button
+                class="w-10 h-10 bg-blue-600 text-white rounded-full flex items-center justify-center hover:bg-blue-700 transition-all"
+              >
+                <svg
+                  class="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewbox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
+                  />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Dashboard Chef de Département -->
+      <div id="admin-dashboard" class="hidden h-full flex">
+        <!-- Sidebar -->
+        <aside
+          class="w-64 bg-gradient-to-b from-slate-800 to-slate-900 text-white flex flex-col flex-shrink-0"
+        >
+          <div class="p-6 border-b border-white/10">
+            <div class="flex items-center gap-3">
+              <div
+                class="w-10 h-10 bg-amber-500 rounded-xl flex items-center justify-center"
+              >
+                <svg
+                  class="w-6 h-6 text-white"
+                  fill="currentColor"
+                  viewbox="0 0 24 24"
+                >
+                  <path
+                    d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"
+                  />
+                </svg>
+              </div>
+              <div>
+                <h1 class="font-bold text-sm">UniSalles</h1>
+                <p class="text-xs text-amber-200">Administration</p>
+              </div>
+            </div>
+          </div>
+          <nav class="flex-1 p-4 space-y-1">
+            <a
+              href="#"
+              onclick="showAdminSection('dashboard')"
+              class="sidebar-item active flex items-center gap-3 px-4 py-3 rounded-xl text-sm"
+            >
+              <svg
+                class="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewbox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6z"
+                />
+              </svg>
+              Tableau de bord
+            </a>
+            <a
+              href="#"
+              onclick="showAdminSection('gestion-salles')"
+              class="sidebar-item flex items-center gap-3 px-4 py-3 rounded-xl text-sm"
+            >
+              <svg
+                class="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewbox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5"
+                />
+              </svg>
+              Gestion des salles
+            </a>
+            <a
+              href="#"
+              onclick="showAdminSection('reclamations-admin')"
+              class="sidebar-item flex items-center gap-3 px-4 py-3 rounded-xl text-sm"
+            >
+              <svg
+                class="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewbox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              Réclamations
+              <span
+                class="ml-auto px-2 py-0.5 bg-yellow-500 text-xs rounded-full"
+                >3</span
+              >
+            </a>
+            <a
+              href="#"
+              onclick="showAdminSection('messages')"
+              class="sidebar-item flex items-center gap-3 px-4 py-3 rounded-xl text-sm"
+            >
+              <svg
+                class="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewbox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
+                />
+              </svg>
+              Messages étudiants
+            </a>
+            <a
+              href="#"
+              onclick="showAdminSection('emploi-admin')"
+              class="sidebar-item flex items-center gap-3 px-4 py-3 rounded-xl text-sm"
+            >
+              <svg
+                class="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewbox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"
+                />
+              </svg>
+              Emplois du temps
+            </a>
+          </nav>
+          <div class="p-4 border-t border-white/10">
+            <a
+              href="#"
+              onclick="logout()"
+              class="sidebar-item flex items-center gap-3 px-4 py-3 rounded-xl text-sm text-red-300 hover:bg-red-500/20"
+            >
+              <svg
+                class="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewbox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                />
+              </svg>
+              Déconnexion
+            </a>
+          </div>
+        </aside>
+        <!-- Main Content -->
+        <main class="flex-1 overflow-auto">
+          <header
+            class="bg-white border-b border-gray-200 px-8 py-4 flex items-center justify-between sticky top-0 z-10"
+          >
+            <div>
+              <h2 class="text-xl font-bold text-gray-800">Administration</h2>
+              <p class="text-sm text-gray-500">
+                Chef de département - Dr. Fatima Zahra
+              </p>
+            </div>
+            <div class="flex items-center gap-4">
+              <button
+                class="relative p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-xl transition-all"
+              >
+                <svg
+                  class="w-6 h-6"
+                  fill="none"
+                  stroke="currentColor"
+                  viewbox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
+                  /></svg
+                ><span
+                  class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full notification-badge"
+                ></span>
+              </button>
+              <div
+                class="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center"
+              >
+                <span class="text-amber-800 font-semibold">FZ</span>
+              </div>
+            </div>
+          </header>
+          <div id="admin-content" class="p-8">
+            <!-- Section Dashboard Admin -->
+            <div id="admin-section-dashboard" class="fade-in">
+              <div
+                class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8"
+              >
+                <div
+                  class="bg-white rounded-2xl p-6 shadow-sm card-hover border border-gray-100"
+                >
+                  <div class="flex items-center justify-between mb-4">
+                    <div
+                      class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center"
+                    >
+                      <svg
+                        class="w-6 h-6 text-blue-600"
+                        fill="none"
+                        stroke="currentColor"
+                        viewbox="0 0 24 24"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                  <h3 class="text-2xl font-bold text-gray-800">32</h3>
+                  <p class="text-sm text-gray-500">Total salles</p>
+                </div>
+                <div
+                  class="bg-white rounded-2xl p-6 shadow-sm card-hover border border-gray-100"
+                >
+                  <div class="flex items-center justify-between mb-4">
+                    <div
+                      class="w-12 h-12 bg-yellow-100 rounded-xl flex items-center justify-center"
+                    >
+                      <svg
+                        class="w-6 h-6 text-yellow-600"
+                        fill="none"
+                        stroke="currentColor"
+                        viewbox="0 0 24 24"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                  <h3 class="text-2xl font-bold text-gray-800">3</h3>
+                  <p class="text-sm text-gray-500">Réclamations</p>
+                </div>
+                <div
+                  class="bg-white rounded-2xl p-6 shadow-sm card-hover border border-gray-100"
+                >
+                  <div class="flex items-center justify-between mb-4">
+                    <div
+                      class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center"
+                    >
+                      <svg
+                        class="w-6 h-6 text-green-600"
+                        fill="none"
+                        stroke="currentColor"
+                        viewbox="0 0 24 24"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                  <h3 class="text-2xl font-bold text-gray-800">45</h3>
+                  <p class="text-sm text-gray-500">Enseignants</p>
+                </div>
+              </div>
+            </div>
+            <!-- Section Gestion Salles -->
+            <div id="admin-section-gestion-salles" class="hidden fade-in">
+              <div class="flex items-center justify-between mb-6">
+                <h3 class="text-xl font-bold text-gray-800">
+                  Gestion des salles
+                </h3>
+                <button
+                  class="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-xl hover:bg-blue-700 transition-all flex items-center gap-2"
+                >
+                  <svg
+                    class="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewbox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                    />
+                  </svg>
+                  Ajouter une salle
+                </button>
+              </div>
+              <div
+                class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden"
+              >
+                <table class="w-full">
+                  <thead class="bg-gray-50">
+                    <tr>
+                      <th
+                        class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase"
+                      >
+                        Salle
+                      </th>
+                      <th
+                        class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase"
+                      >
+                        Département
+                      </th>
+                      <th
+                        class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase"
+                      >
+                        Capacité
+                      </th>
+                      <th
+                        class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase"
+                      >
+                        Statut
+                      </th>
+                      <th
+                        class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase"
+                      >
+                        Actions
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-gray-100">
+                    <tr class="hover:bg-gray-50">
+                      <td class="px-6 py-4 font-medium text-gray-800">I1</td>
+                      <td class="px-6 py-4 text-gray-600">Informatique</td>
+                      <td class="px-6 py-4 text-gray-600">30</td>
+                      <td class="px-6 py-4">
+                        <span
+                          class="px-3 py-1 bg-green-100 text-green-700 text-xs rounded-full"
+                          >Active</span
+                        >
+                      </td>
+                      <td class="px-6 py-4">
+                        <div class="flex gap-2">
+                          <button
+                            class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg"
+                          >
+                            <svg
+                              class="w-4 h-4"
+                              fill="none"
+                              stroke="currentColor"
+                              viewbox="0 0 24 24"
+                            >
+                              <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                              />
+                            </svg>
+                          </button>
+                          <button
+                            class="p-2 text-red-600 hover:bg-red-50 rounded-lg"
+                          >
+                            <svg
+                              class="w-4 h-4"
+                              fill="none"
+                              stroke="currentColor"
+                              viewbox="0 0 24 24"
+                            >
+                              <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                              />
+                            </svg>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr class="hover:bg-gray-50">
+                      <td class="px-6 py-4 font-medium text-gray-800">I5</td>
+                      <td class="px-6 py-4 text-gray-600">Informatique</td>
+                      <td class="px-6 py-4 text-gray-600">25</td>
+                      <td class="px-6 py-4">
+                        <span
+                          class="px-3 py-1 bg-green-100 text-green-700 text-xs rounded-full"
+                          >Active</span
+                        >
+                      </td>
+                      <td class="px-6 py-4">
+                        <div class="flex gap-2">
+                          <button
+                            class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg"
+                          >
+                            <svg
+                              class="w-4 h-4"
+                              fill="none"
+                              stroke="currentColor"
+                              viewbox="0 0 24 24"
+                            >
+                              <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                              />
+                            </svg>
+                          </button>
+                          <button
+                            class="p-2 text-red-600 hover:bg-red-50 rounded-lg"
+                          >
+                            <svg
+                              class="w-4 h-4"
+                              fill="none"
+                              stroke="currentColor"
+                              viewbox="0 0 24 24"
+                            >
+                              <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                              />
+                            </svg>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr class="hover:bg-gray-50">
+                      <td class="px-6 py-4 font-medium text-gray-800">
+                        Amphi 2
+                      </td>
+                      <td class="px-6 py-4 text-gray-600">Informatique</td>
+                      <td class="px-6 py-4 text-gray-600">150</td>
+                      <td class="px-6 py-4">
+                        <span
+                          class="px-3 py-1 bg-green-100 text-green-700 text-xs rounded-full"
+                          >Active</span
+                        >
+                      </td>
+                      <td class="px-6 py-4">
+                        <div class="flex gap-2">
+                          <button
+                            class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg"
+                          >
+                            <svg
+                              class="w-4 h-4"
+                              fill="none"
+                              stroke="currentColor"
+                              viewbox="0 0 24 24"
+                            >
+                              <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                              />
+                            </svg>
+                          </button>
+                          <button
+                            class="p-2 text-red-600 hover:bg-red-50 rounded-lg"
+                          >
+                            <svg
+                              class="w-4 h-4"
+                              fill="none"
+                              stroke="currentColor"
+                              viewbox="0 0 24 24"
+                            >
+                              <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                              />
+                            </svg>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <!-- Section Réclamations Admin -->
+            <div id="admin-section-reclamations-admin" class="hidden fade-in">
+              <h3 class="text-xl font-bold text-gray-800 mb-6">
+                Réclamations reçues
+              </h3>
+              <div class="space-y-4">
+                <div
+                  class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6"
+                >
+                  <div class="flex items-start justify-between">
+                    <div class="flex gap-4">
+                      <div
+                        class="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center"
+                      >
+                        <svg
+                          class="w-6 h-6 text-red-600"
+                          fill="none"
+                          stroke="currentColor"
+                          viewbox="0 0 24 24"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                          />
+                        </svg>
+                      </div>
+                      <div>
+                        <p class="font-semibold text-gray-800">
+                          Problème matériel - Salle TP C2
+                        </p>
+                        <p class="text-sm text-gray-500 mt-1">
+                          Signalé par: Prof. Ahmed Benali
+                        </p>
+                        <p class="text-sm text-gray-600 mt-2">
+                          Le projecteur ne fonctionne plus depuis ce matin.
+                          Impossible de faire le cours.
+                        </p>
+                        <p class="text-xs text-gray-400 mt-2">
+                          Il y a 2 heures
+                        </p>
+                      </div>
+                    </div>
+                    <div class="flex gap-2">
+                      <button
+                        class="px-3 py-1.5 bg-green-100 text-green-700 text-sm rounded-lg hover:bg-green-200"
+                      >
+                        Traiter
+                      </button>
+                      <button
+                        class="px-3 py-1.5 bg-gray-100 text-gray-600 text-sm rounded-lg hover:bg-gray-200"
+                      >
+                        Archiver
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Section Messages -->
+            <div id="admin-section-messages" class="hidden fade-in">
+              <h3 class="text-xl font-bold text-gray-800 mb-6">
+                Envoyer un message aux étudiants
+              </h3>
+              <div
+                class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 max-w-2xl"
+              >
+                <form class="space-y-4">
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2"
+                      >Destinataires</label
+                    >
+                    <select
+                      class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"
+                    >
+                      <option>Tous les étudiants</option>
+                      <option>Licence 1 - Informatique</option>
+                      <option>Licence 2 - Informatique</option>
+                      <option>Licence 3 - Informatique</option>
+                      <option>Master 1 - Informatique</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2"
+                      >Type de notification</label
+                    >
+                    <select
+                      class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"
+                    >
+                      <option>Information générale</option>
+                      <option>Changement de salle</option>
+                      <option>Rattrapage</option>
+                      <option>Annulation de cours</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2"
+                      >Message</label
+                    >
+                    <textarea
+                      rows="4"
+                      placeholder="Rédigez votre message..."
+                      class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none resize-none"
+                    ></textarea>
+                  </div>
+                  <button
+                    type="submit"
+                    class="px-6 py-3 bg-blue-600 text-white font-medium rounded-xl hover:bg-blue-700 transition-all"
+                  >
+                    Envoyer la notification
+                  </button>
+                </form>
+              </div>
+            </div>
+            <!-- Section Emploi Admin (CRUD) -->
+            <div id="admin-section-emploi-admin" class="hidden fade-in">
+              <div class="flex items-center justify-between mb-6">
+                <div>
+                  <h3 class="text-xl font-bold text-gray-800">
+                    Gestion des emplois du temps
+                  </h3>
+                  <p class="text-sm text-gray-500 mt-1">Ajoutez, modifiez ou supprimez les séances de cours</p>
+                </div>
+                <button
+                  onclick="openEmploiModal()"
+                  class="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 text-white text-sm font-medium rounded-xl hover:from-blue-700 hover:to-blue-800 transition-all shadow-md"
+                >
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                  </svg>
+                  Ajouter une séance
+                </button>
+              </div>
+
+              <!-- Filtres rapides -->
+              <div class="flex gap-3 mb-4 flex-wrap">
+                <select id="filtre-emploi-classe" onchange="renderEmplois()" class="px-4 py-2 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none bg-white">
+                  <option value="">Toutes les classes</option>
+                  <option value="L1-INFO">1ère Licence Info</option>
+                  <option value="L2-INFO">2ème Licence Info</option>
+                  <option value="L3-INFO">3ème Licence Info</option>
+                  <option value="L1-TIC">1ère Licence TIC</option>
+                  <option value="L2-TIC">2ème Licence TIC</option>
+                  <option value="L3-TIC">3ème Licence TIC</option>
+                  <option value="M1-GL">Mastère 1 GL</option>
+                  <option value="M2-GL">Mastère 2 GL</option>
+                </select>
+                <select id="filtre-emploi-jour" onchange="renderEmplois()" class="px-4 py-2 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none bg-white">
+                  <option value="">Tous les jours</option>
+                  <option value="Lundi">Lundi</option>
+                  <option value="Mardi">Mardi</option>
+                  <option value="Mercredi">Mercredi</option>
+                  <option value="Jeudi">Jeudi</option>
+                  <option value="Vendredi">Vendredi</option>
+                  <option value="Samedi">Samedi</option>
+                </select>
+              </div>
+
+              <!-- Tableau des emplois du temps -->
+              <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                <div class="overflow-x-auto">
+                  <table class="w-full text-left border-collapse">
+                    <thead class="bg-gray-50 text-gray-500 text-xs uppercase font-semibold">
+                      <tr>
+                        <th class="px-6 py-4">Classe</th>
+                        <th class="px-6 py-4">Groupe(s)</th>
+                        <th class="px-6 py-4">Matière</th>
+                        <th class="px-6 py-4">Enseignant</th>
+                        <th class="px-6 py-4">Jour</th>
+                        <th class="px-6 py-4">Créneau</th>
+                        <th class="px-6 py-4">Salle</th>
+                        <th class="px-6 py-4 text-center">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody id="emplois-table-body" class="divide-y divide-gray-100 text-sm text-gray-700">
+                      <!-- Les lignes seront générées ici par JavaScript -->
+                    </tbody>
+                  </table>
+                  <!-- Empty state si aucune donnée -->
+                  <div id="emplois-empty-state" class="hidden flex flex-col items-center justify-center p-8 text-center">
+                    <div class="w-16 h-16 bg-gray-100 flex items-center justify-center rounded-full mb-4">
+                      <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                      </svg>
+                    </div>
+                    <p class="text-gray-500 font-medium">Aucun emploi du temps enregistré</p>
+                    <p class="text-gray-400 text-xs mt-1">Commencez par en ajouter un avec le bouton ci-dessus.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+      <!-- Modal Ajout/Modification Emploi du temps -->
+      <div id="emploi-modal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg fade-in max-h-[90vh] overflow-y-auto">
+          <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between sticky top-0 bg-white z-10">
+            <div class="flex items-center gap-3">
+              <div class="w-9 h-9 bg-amber-100 rounded-xl flex items-center justify-center">
+                <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                </svg>
+              </div>
+              <h3 id="emploi-modal-title" class="font-semibold text-gray-800">Ajouter une séance</h3>
+            </div>
+            <button onclick="closeEmploiModal()" class="p-2 hover:bg-gray-100 rounded-lg transition-all">
+              <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+              </svg>
+            </button>
+          </div>
+          <form onsubmit="submitEmploi(event)" class="p-6 space-y-4">
+            <input type="hidden" id="emploi-edit-index" value="-1" />
+
+            <!-- Classe -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Classe</label>
+              <select id="emploi-classe" required class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none bg-gray-50">
+                <option value="">-- Sélectionnez une classe --</option>
+                <optgroup label="Licence">
+                  <option value="L1-INFO">1ère Licence Informatique</option>
+                  <option value="L2-INFO">2ème Licence Informatique</option>
+                  <option value="L3-INFO">3ème Licence Informatique</option>
+                  <option value="L1-TIC">1ère Licence TIC</option>
+                  <option value="L2-TIC">2ème Licence TIC</option>
+                  <option value="L3-TIC">3ème Licence TIC</option>
+                </optgroup>
+                <optgroup label="Mastère">
+                  <option value="M1-GL">Mastère 1 Génie Logiciel</option>
+                  <option value="M2-GL">Mastère 2 Génie Logiciel</option>
+                  <option value="M1-RSI">Mastère 1 RSI</option>
+                  <option value="M2-RSI">Mastère 2 RSI</option>
+                </optgroup>
+              </select>
+            </div>
+
+            <!-- Groupe(s) -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Groupe(s)</label>
+              <div class="grid grid-cols-2 gap-3">
+                <label class="flex items-center gap-3 p-3 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-blue-300 transition-all emploi-group-checkbox-label">
+                  <input type="checkbox" name="emploi_groupe" value="Groupe 1" class="accent-blue-600 w-4 h-4" onchange="updateEmploiGroupeStyle(this)" />
+                  <span class="text-sm font-medium text-gray-800">&#128101; Groupe 1</span>
+                </label>
+                <label class="flex items-center gap-3 p-3 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-blue-300 transition-all emploi-group-checkbox-label">
+                  <input type="checkbox" name="emploi_groupe" value="Groupe 2" class="accent-blue-600 w-4 h-4" onchange="updateEmploiGroupeStyle(this)" />
+                  <span class="text-sm font-medium text-gray-800">&#128101; Groupe 2</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Matière -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Matière</label>
+              <input type="text" id="emploi-matiere" required placeholder="Ex: Algorithmique, Base de données..." class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none bg-gray-50" />
+            </div>
+
+            <!-- Enseignant -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Enseignant</label>
+              <input type="text" id="emploi-enseignant" required placeholder="Ex: Prof. Ahmed Benali" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none bg-gray-50" />
+            </div>
+
+            <!-- Jour -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Jour</label>
+              <select id="emploi-jour" required class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none bg-gray-50">
+                <option value="">-- Sélectionnez un jour --</option>
+                <option value="Lundi">Lundi</option>
+                <option value="Mardi">Mardi</option>
+                <option value="Mercredi">Mercredi</option>
+                <option value="Jeudi">Jeudi</option>
+                <option value="Vendredi">Vendredi</option>
+                <option value="Samedi">Samedi</option>
+              </select>
+            </div>
+
+            <!-- Créneau horaire -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Créneau horaire</label>
+              <select id="emploi-creneau" required class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none bg-gray-50">
+                <option value="">-- Sélectionnez un créneau --</option>
+                <option value="08:30 - 10:00">08:30 - 10:00</option>
+                <option value="10:00 - 11:30">10:00 - 11:30</option>
+                <option value="11:30 - 13:00">11:30 - 13:00</option>
+                <option value="14:00 - 15:30">14:00 - 15:30</option>
+                <option value="15:30 - 17:00">15:30 - 17:00</option>
+              </select>
+            </div>
+
+            <!-- Salle -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Salle / Amphi</label>
+              <select id="emploi-salle" required class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none bg-gray-50">
+                <option value="">-- Sélectionnez une salle --</option>
+                <optgroup label="Salles">
+                  <option value="I1">I1 — 30 places</option>
+                  <option value="I2">I2 — 30 places</option>
+                  <option value="I3">I3 — 30 places</option>
+                  <option value="I4">I4 — 30 places</option>
+                  <option value="I5">I5 — 25 places</option>
+                  <option value="I6">I6 — 25 places</option>
+                  <option value="I7">I7 — 28 places</option>
+                  <option value="I8">I8 — 28 places</option>
+                  <option value="I9">I9 — 32 places</option>
+                  <option value="I10">I10 — 32 places</option>
+                  <option value="I11">I11 — 35 places</option>
+                  <option value="I12">I12 — 35 places</option>
+                </optgroup>
+                <optgroup label="Amphithéâtres">
+                  <option value="Amphi 1">Amphi 1 — 200 places</option>
+                  <option value="Amphi 2">Amphi 2 — 150 places</option>
+                  <option value="Amphi 3">Amphi 3 — 180 places</option>
+                  <option value="Amphi 4">Amphi 4 — 120 places</option>
+                </optgroup>
+              </select>
+            </div>
+
+            <!-- Boutons -->
+            <div class="flex gap-3 pt-2">
+              <button type="button" onclick="closeEmploiModal()" class="flex-1 py-3 border border-gray-200 text-gray-700 font-medium rounded-xl hover:bg-gray-50 transition-all">
+                Annuler
+              </button>
+              <button type="submit" id="emploi-submit-btn" class="flex-1 py-3 bg-gradient-to-r from-blue-900 to-blue-600 text-white font-medium rounded-xl hover:from-blue-800 hover:to-blue-500 transition-all shadow-md">
+                &#10003; Enregistrer
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+          </div>
+        </main>
+      </div>
+      <!-- Dashboard Étudiant -->
+      <div id="student-dashboard" class="hidden h-full flex">
+        <!-- Sidebar -->
+        <aside
+          class="w-64 bg-gradient-to-b from-emerald-800 to-emerald-900 text-white flex flex-col flex-shrink-0"
+        >
+          <div class="p-6 border-b border-white/10">
+            <div class="flex items-center gap-3">
+              <div
+                class="w-10 h-10 bg-white rounded-xl flex items-center justify-center"
+              >
+                <svg
+                  class="w-6 h-6 text-emerald-800"
+                  fill="currentColor"
+                  viewbox="0 0 24 24"
+                >
+                  <path
+                    d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3z"
+                  />
+                </svg>
+              </div>
+              <div>
+                <h1 class="font-bold text-sm">UniSalles</h1>
+                <p class="text-xs text-emerald-200">Espace Étudiant</p>
+              </div>
+            </div>
+          </div>
+          <nav class="flex-1 p-4 space-y-1">
+            <a
+              href="#"
+              onclick="showStudentSection('dashboard')"
+              class="sidebar-item active flex items-center gap-3 px-4 py-3 rounded-xl text-sm"
+            >
+              <svg
+                class="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewbox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6z"
+                />
+              </svg>
+              Tableau de bord
+            </a>
+            <a
+              href="#"
+              onclick="showStudentSection('emploi')"
+              class="sidebar-item flex items-center gap-3 px-4 py-3 rounded-xl text-sm"
+            >
+              <svg
+                class="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewbox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                />
+              </svg>
+              Mon emploi du temps
+            </a>
+            <a
+              href="#"
+              onclick="showStudentSection('notifications')"
+              class="sidebar-item flex items-center gap-3 px-4 py-3 rounded-xl text-sm"
+            >
+              <svg
+                class="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewbox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
+                />
+              </svg>
+              Notifications
+              <span class="ml-auto px-2 py-0.5 bg-red-500 text-xs rounded-full"
+                >2</span
+              >
+            </a>
+          </nav>
+          <div class="p-4 border-t border-white/10">
+            <a
+              href="#"
+              onclick="logout()"
+              class="sidebar-item flex items-center gap-3 px-4 py-3 rounded-xl text-sm text-red-300 hover:bg-red-500/20"
+            >
+              <svg
+                class="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewbox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                />
+              </svg>
+              Déconnexion
+            </a>
+          </div>
+        </aside>
+        <!-- Main Content -->
+        <main class="flex-1 overflow-auto">
+          <header
+            class="bg-white border-b border-gray-200 px-8 py-4 flex items-center justify-between sticky top-0 z-10"
+          >
+            <div>
+              <h2 class="text-xl font-bold text-gray-800">Mon espace</h2>
+              <p class="text-sm text-gray-500">
+                Youssef El Amrani - L3 Informatique - Groupe A
+              </p>
+            </div>
+            <div class="flex items-center gap-4">
+              <button
+                class="relative p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-xl transition-all"
+              >
+                <svg
+                  class="w-6 h-6"
+                  fill="none"
+                  stroke="currentColor"
+                  viewbox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
+                  /></svg
+                ><span
+                  class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full notification-badge"
+                ></span>
+              </button>
+              <div
+                class="w-10 h-10 bg-emerald-100 rounded-xl flex items-center justify-center"
+              >
+                <span class="text-emerald-800 font-semibold">YE</span>
+              </div>
+            </div>
+          </header>
+          <div id="student-content" class="p-8">
+            <!-- Section Dashboard Étudiant -->
+            <div id="student-section-dashboard" class="fade-in">
+              <!-- Notifications importantes -->
+              <div
+                class="bg-gradient-to-r from-orange-500 to-amber-500 rounded-2xl p-6 mb-6 text-white"
+              >
+                <div class="flex items-center gap-4">
+                  <div
+                    class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center"
+                  >
+                    <svg
+                      class="w-6 h-6"
+                      fill="none"
+                      stroke="currentColor"
+                      viewbox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
+                      />
+                    </svg>
+                  </div>
+                  <div>
+                    <h3 class="font-bold text-lg">⚠️ Rattrapage prévu</h3>
+                    <p class="text-white/90">
+                      Cours d'Algorithmique - Samedi 20 Janvier à 10h - Amphi A1
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <!-- Prochain cours -->
+              <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                <div
+                  class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6"
+                >
+                  <h3 class="font-semibold text-gray-800 mb-4">
+                    Prochain cours
+                  </h3>
+                  <div class="flex items-center gap-4">
+                    <div
+                      class="w-16 h-16 bg-blue-100 rounded-xl flex items-center justify-center"
+                    >
+                      <svg
+                        class="w-8 h-8 text-blue-600"
+                        fill="none"
+                        stroke="currentColor"
+                        viewbox="0 0 24 24"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+                        />
+                      </svg>
+                    </div>
+                    <div>
+                      <p class="font-bold text-gray-800 text-lg">
+                        Algorithmique
+                      </p>
+                      <p class="text-gray-500">Prof. Ahmed Benali</p>
+                      <p class="text-sm text-blue-600 font-medium mt-1">
+                        Aujourd'hui • 10:00 - 11:30 • Salle A1
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6"
+                >
+                  <h3 class="font-semibold text-gray-800 mb-4">
+                    Cette semaine
+                  </h3>
+                  <div class="space-y-3">
+                    <div class="flex items-center justify-between">
+                      <span class="text-sm text-gray-600">Cours prévus</span>
+                      <span class="font-bold text-gray-800">12</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                      <span class="text-sm text-gray-600">Heures de cours</span>
+                      <span class="font-bold text-gray-800">24h</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                      <span class="text-sm text-gray-600">Rattrapages</span>
+                      <span class="font-bold text-orange-600">1</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Emploi du jour -->
+              <div
+                class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden"
+              >
+                <div class="px-6 py-4 border-b border-gray-100">
+                  <h3 class="font-semibold text-gray-800">
+                    Emploi du temps - Aujourd'hui
+                  </h3>
+                </div>
+                <div class="divide-y divide-gray-100">
+                  <div class="px-6 py-4 flex items-center gap-4 bg-blue-50">
+                    <div class="text-center min-w-[60px]">
+                      <p class="text-xs text-gray-500">08:30</p>
+                      <p class="text-xs text-gray-500">10:00</p>
+                    </div>
+                    <div class="w-1 h-12 bg-blue-500 rounded-full"></div>
+                    <div>
+                      <p class="font-medium text-gray-800">Algorithmique</p>
+                      <p class="text-sm text-gray-500">
+                        Amphi A1 • Prof. Benali
+                      </p>
+                    </div>
+                  </div>
+                  <div class="px-6 py-4 flex items-center gap-4">
+                    <div class="text-center min-w-[60px]">
+                      <p class="text-xs text-gray-500">10:00</p>
+                      <p class="text-xs text-gray-500">11:30</p>
+                    </div>
+                    <div class="w-1 h-12 bg-purple-500 rounded-full"></div>
+                    <div>
+                      <p class="font-medium text-gray-800">Base de données</p>
+                      <p class="text-sm text-gray-500">
+                        Salle B3 • Prof. Khalid
+                      </p>
+                    </div>
+                  </div>
+                  <div class="px-6 py-4 flex items-center gap-4">
+                    <div class="text-center min-w-[60px]">
+                      <p class="text-xs text-gray-500">14:00</p>
+                      <p class="text-xs text-gray-500">15:30</p>
+                    </div>
+                    <div class="w-1 h-12 bg-green-500 rounded-full"></div>
+                    <div>
+                      <p class="font-medium text-gray-800">
+                        TP Programmation Web
+                      </p>
+                      <p class="text-sm text-gray-500">
+                        Salle TP C2 • Prof. Amrani
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Section Emploi Étudiant -->
+            <div id="student-section-emploi" class="hidden fade-in">
+              <h3 class="text-xl font-bold text-gray-800 mb-6">
+                Mon emploi du temps
+              </h3>
+              <div
+                class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden"
+              >
+                <div
+                  class="grid grid-cols-7 divide-x divide-gray-100 bg-gray-50"
+                >
+                  <div class="p-4 font-medium text-sm text-gray-500"></div>
+                  <div
+                    class="p-4 font-medium text-sm text-gray-600 text-center"
+                  >
+                    Lundi
+                  </div>
+                  <div
+                    class="p-4 font-medium text-sm text-gray-600 text-center"
+                  >
+                    Mardi
+                  </div>
+                  <div
+                    class="p-4 font-medium text-sm text-gray-600 text-center"
+                  >
+                    Mercredi
+                  </div>
+                  <div
+                    class="p-4 font-medium text-sm text-gray-600 text-center"
+                  >
+                    Jeudi
+                  </div>
+                  <div
+                    class="p-4 font-medium text-sm text-gray-600 text-center"
+                  >
+                    Vendredi
+                  </div>
+                  <div
+                    class="p-4 font-medium text-sm text-gray-600 text-center"
+                  >
+                    Samedi
+                  </div>
+                </div>
+                <div
+                  class="grid grid-cols-7 divide-x divide-gray-100 border-t border-gray-100"
+                >
+                  <div class="p-4 text-sm text-gray-500 font-medium">
+                    08:30 - 10:00
+                  </div>
+                  <div class="p-2">
+                    <div class="p-3 bg-blue-100 rounded-lg">
+                      <p class="text-xs font-semibold text-blue-800">
+                        Algorithmique
+                      </p>
+                      <p class="text-xs text-blue-600">Amphi A1</p>
+                    </div>
+                  </div>
+                  <div class="p-2"></div>
+                  <div class="p-2">
+                    <div class="p-3 bg-purple-100 rounded-lg">
+                      <p class="text-xs font-semibold text-purple-800">
+                        Base de données
+                      </p>
+                      <p class="text-xs text-purple-600">Salle B3</p>
+                    </div>
+                  </div>
+                  <div class="p-2"></div>
+                  <div class="p-2">
+                    <div class="p-3 bg-green-100 rounded-lg">
+                      <p class="text-xs font-semibold text-green-800">
+                        Prog. Web
+                      </p>
+                      <p class="text-xs text-green-600">Salle C2</p>
+                    </div>
+                  </div>
+                  <div class="p-2"></div>
+                </div>
+                <div
+                  class="grid grid-cols-7 divide-x divide-gray-100 border-t border-gray-100"
+                >
+                  <div class="p-4 text-sm text-gray-500 font-medium">
+                    10:00 - 11:30
+                  </div>
+                  <div class="p-2"></div>
+                  <div class="p-2">
+                    <div class="p-3 bg-orange-100 rounded-lg">
+                      <p class="text-xs font-semibold text-orange-800">
+                        Réseaux
+                      </p>
+                      <p class="text-xs text-orange-600">Amphi A1</p>
+                    </div>
+                  </div>
+                  <div class="p-2"></div>
+                  <div class="p-2">
+                    <div class="p-3 bg-blue-100 rounded-lg">
+                      <p class="text-xs font-semibold text-blue-800">
+                        Algorithmique TD
+                      </p>
+                      <p class="text-xs text-blue-600">Salle A1</p>
+                    </div>
+                  </div>
+                  <div class="p-2"></div>
+                  <div class="p-2">
+                    <div class="p-3 bg-red-100 rounded-lg">
+                      <p class="text-xs font-semibold text-red-800">
+                        Rattrapage
+                      </p>
+                      <p class="text-xs text-red-600">Salle I3</p>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="grid grid-cols-7 divide-x divide-gray-100 border-t border-gray-100"
+                >
+                  <div class="p-4 text-sm text-gray-500 font-medium">
+                    11:30 - 13:00
+                  </div>
+                  <div class="p-2">
+                    <div class="p-3 bg-teal-100 rounded-lg">
+                      <p class="text-xs font-semibold text-teal-800">
+                        Systèmes
+                      </p>
+                      <p class="text-xs text-teal-600">Salle I5</p>
+                    </div>
+                  </div>
+                  <div class="p-2"></div>
+                  <div class="p-2"></div>
+                  <div class="p-2"></div>
+                  <div class="p-2">
+                    <div class="p-3 bg-orange-100 rounded-lg">
+                      <p class="text-xs font-semibold text-orange-800">
+                        Réseaux TD
+                      </p>
+                      <p class="text-xs text-orange-600">Salle I2</p>
+                    </div>
+                  </div>
+                  <div class="p-2"></div>
+                </div>
+                <div
+                  class="grid grid-cols-7 divide-x divide-gray-100 border-t border-gray-100"
+                >
+                  <div class="p-4 text-sm text-gray-500 font-medium">
+                    14:00 - 15:30
+                  </div>
+                  <div class="p-2">
+                    <div class="p-3 bg-green-100 rounded-lg">
+                      <p class="text-xs font-semibold text-green-800">TP Web</p>
+                      <p class="text-xs text-green-600">Salle C2</p>
+                    </div>
+                  </div>
+                  <div class="p-2"></div>
+                  <div class="p-2">
+                    <div class="p-3 bg-purple-100 rounded-lg">
+                      <p class="text-xs font-semibold text-purple-800">
+                        TD BDD
+                      </p>
+                      <p class="text-xs text-purple-600">Salle B3</p>
+                    </div>
+                  </div>
+                  <div class="p-2"></div>
+                  <div class="p-2"></div>
+                  <div class="p-2"></div>
+                </div>
+                <div
+                  class="grid grid-cols-7 divide-x divide-gray-100 border-t border-gray-100"
+                >
+                  <div class="p-4 text-sm text-gray-500 font-medium">
+                    15:30 - 17:00
+                  </div>
+                  <div class="p-2"></div>
+                  <div class="p-2">
+                    <div class="p-3 bg-indigo-100 rounded-lg">
+                      <p class="text-xs font-semibold text-indigo-800">
+                        TP Systèmes
+                      </p>
+                      <p class="text-xs text-indigo-600">Salle I8</p>
+                    </div>
+                  </div>
+                  <div class="p-2"></div>
+                  <div class="p-2"></div>
+                  <div class="p-2"></div>
+                  <div class="p-2"></div>
+                </div>
+              </div>
+            </div>
+            <!-- Section Notifications Étudiant -->
+            <div id="student-section-notifications" class="hidden fade-in">
+              <h3 class="text-xl font-bold text-gray-800 mb-6">
+                Mes notifications
+              </h3>
+              <div class="space-y-4">
+                <div
+                  class="bg-white rounded-2xl shadow-sm border border-l-4 border-l-orange-500 p-6"
+                >
+                  <div class="flex items-start gap-4">
+                    <div
+                      class="w-10 h-10 bg-orange-100 rounded-xl flex items-center justify-center flex-shrink-0"
+                    >
+                      <svg
+                        class="w-5 h-5 text-orange-600"
+                        fill="none"
+                        stroke="currentColor"
+                        viewbox="0 0 24 24"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                        />
+                      </svg>
+                    </div>
+                    <div>
+                      <p class="font-semibold text-gray-800">
+                        Rattrapage programmé
+                      </p>
+                      <p class="text-sm text-gray-600 mt-1">
+                        Un cours de rattrapage d'Algorithmique est prévu le
+                        Samedi 20 Janvier à 10h00 en Amphi A1.
+                      </p>
+                      <p class="text-xs text-gray-400 mt-2">Il y a 2 heures</p>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="bg-white rounded-2xl shadow-sm border border-l-4 border-l-blue-500 p-6"
+                >
+                  <div class="flex items-start gap-4">
+                    <div
+                      class="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center flex-shrink-0"
+                    >
+                      <svg
+                        class="w-5 h-5 text-blue-600"
+                        fill="none"
+                        stroke="currentColor"
+                        viewbox="0 0 24 24"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"
+                        />
+                      </svg>
+                    </div>
+                    <div>
+                      <p class="font-semibold text-gray-800">
+                        Changement de salle
+                      </p>
+                      <p class="text-sm text-gray-600 mt-1">
+                        Le cours de Base de données de demain aura lieu en Salle
+                        D1 au lieu de Salle B3.
+                      </p>
+                      <p class="text-xs text-gray-400 mt-2">Hier à 16:30</p>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 opacity-60"
+                >
+                  <div class="flex items-start gap-4">
+                    <div
+                      class="w-10 h-10 bg-gray-100 rounded-xl flex items-center justify-center flex-shrink-0"
+                    >
+                      <svg
+                        class="w-5 h-5 text-gray-500"
+                        fill="none"
+                        stroke="currentColor"
+                        viewbox="0 0 24 24"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                        />
+                      </svg>
+                    </div>
+                    <div>
+                      <p class="font-semibold text-gray-800">Information</p>
+                      <p class="text-sm text-gray-600 mt-1">
+                        Les inscriptions pour le semestre 2 sont ouvertes
+                        jusqu'au 31 Janvier.
+                      </p>
+                      <p class="text-xs text-gray-400 mt-2">Il y a 3 jours</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+      <!-- Modal de Réservation -->
+      <div
+        id="reservation-modal"
+        class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
+      >
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg fade-in">
+          <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <div class="w-9 h-9 bg-blue-100 rounded-xl flex items-center justify-center">
+                <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                </svg>
+              </div>
+              <h3 class="font-semibold text-gray-800">Nouvelle réservation</h3>
+            </div>
+            <button onclick="closeReservationModal()" class="p-2 hover:bg-gray-100 rounded-lg transition-all">
+              <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+              </svg>
+            </button>
+          </div>
+          <form onsubmit="submitReservation(event)" class="p-6 space-y-4">
+
+            <!-- Type de salle -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Type de salle</label>
+              <div class="grid grid-cols-2 gap-3">
+                <label id="type-salle-label" class="flex items-center gap-3 p-3 border-2 border-blue-500 bg-blue-50 rounded-xl cursor-pointer transition-all">
+                  <input type="radio" name="type-salle" value="salle" checked onchange="filterSallesDisponibles('salle')" class="accent-blue-600" />
+                  <span class="text-sm font-medium text-gray-800">&#127979; Salle</span>
+                </label>
+                <label id="type-amphi-label" class="flex items-center gap-3 p-3 border-2 border-gray-200 bg-white rounded-xl cursor-pointer transition-all hover:border-blue-300">
+                  <input type="radio" name="type-salle" value="amphi" onchange="filterSallesDisponibles('amphi')" class="accent-blue-600" />
+                  <span class="text-sm font-medium text-gray-800">&#127917; Amphi</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Salle disponible -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Salle disponible</label>
+              <select id="modal-salle" required class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all bg-gray-50">
+                <option value="">-- S&#233;lectionnez une salle --</option>
+                <optgroup label="Salles disponibles" id="salles-group">
+                  <option value="I1">I1 &mdash; 30 places</option>
+                  <option value="I2">I2 &mdash; 30 places</option>
+                  <option value="I3">I3 &mdash; 30 places</option>
+                  <option value="I4">I4 &mdash; 30 places</option>
+                  <option value="I6">I6 &mdash; 25 places</option>
+                  <option value="I7">I7 &mdash; 28 places</option>
+                  <option value="I8">I8 &mdash; 28 places</option>
+                  <option value="I9">I9 &mdash; 32 places</option>
+                  <option value="I10">I10 &mdash; 32 places</option>
+                  <option value="I11">I11 &mdash; 35 places</option>
+                  <option value="I12">I12 &mdash; 35 places</option>
+                </optgroup>
+                <optgroup label="Amphith&#233;&#226;tres disponibles" id="amphitheatres-group" style="display:none">
+                  <option value="Amphi 1">Amphi 1 &mdash; 200 places</option>
+                  <option value="Amphi 3">Amphi 3 &mdash; 180 places</option>
+                  <option value="Amphi 4">Amphi 4 &mdash; 120 places</option>
+                </optgroup>
+              </select>
+              <p class="text-xs text-gray-400 mt-1">Seules les salles libres sont affich&#233;es</p>
+            </div>
+
+            <!-- Date de r&#233;servation -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Date de r&#233;servation</label>
+              <input type="date" id="modal-date" required class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all bg-gray-50" />
+            </div>
+
+            <!-- Heure d&#233;but / Heure fin -->
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Heure d&#233;but</label>
+                <select id="modal-heure-debut" required onchange="updateHeuresFin()" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none bg-gray-50">
+                  <option value="08:00">08:00</option>
+                  <option value="09:00">09:00</option>
+                  <option value="10:00">10:00</option>
+                  <option value="11:00">11:00</option>
+                  <option value="12:00">12:00</option>
+                  <option value="13:00">13:00</option>
+                  <option value="14:00">14:00</option>
+                  <option value="15:00">15:00</option>
+                  <option value="16:00">16:00</option>
+                  <option value="17:00">17:00</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Heure fin</label>
+                <select id="modal-heure-fin" required class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none bg-gray-50">
+                  <option value="09:00">09:00</option>
+                  <option value="10:00">10:00</option>
+                  <option value="11:00">11:00</option>
+                  <option value="12:00">12:00</option>
+                  <option value="13:00">13:00</option>
+                  <option value="14:00">14:00</option>
+                  <option value="15:00">15:00</option>
+                  <option value="16:00">16:00</option>
+                  <option value="17:00">17:00</option>
+                  <option value="18:00">18:00</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Classe -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Classe</label>
+              <select id="modal-classe" required class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all bg-gray-50">
+                <option value="">-- Sélectionnez une classe --</option>
+                <optgroup label="Licence">
+                  <option value="L1-INFO">1ère Licence Informatique</option>
+                  <option value="L2-INFO">2ème Licence Informatique</option>
+                  <option value="L3-INFO">3ème Licence Informatique</option>
+                  <option value="L1-TIC">1ère Licence TIC</option>
+                  <option value="L2-TIC">2ème Licence TIC</option>
+                  <option value="L3-TIC">3ème Licence TIC</option>
+                </optgroup>
+                <optgroup label="Mastère">
+                  <option value="M1-GL">Mastère 1 Génie Logiciel</option>
+                  <option value="M2-GL">Mastère 2 Génie Logiciel</option>
+                  <option value="M1-RSI">Mastère 1 RSI</option>
+                  <option value="M2-RSI">Mastère 2 RSI</option>
+                </optgroup>
+              </select>
+            </div>
+
+            <!-- Groupes (checkbox) -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Groupe(s)</label>
+              <div class="grid grid-cols-2 gap-3">
+                <label class="flex items-center gap-3 p-3 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-blue-300 transition-all group-checkbox-label">
+                  <input type="checkbox" name="groupe" value="Groupe 1" class="accent-blue-600 w-4 h-4" onchange="updateGroupeStyle(this)" />
+                  <span class="text-sm font-medium text-gray-800">&#128101; Groupe 1</span>
+                </label>
+                <label class="flex items-center gap-3 p-3 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-blue-300 transition-all group-checkbox-label">
+                  <input type="checkbox" name="groupe" value="Groupe 2" class="accent-blue-600 w-4 h-4" onchange="updateGroupeStyle(this)" />
+                  <span class="text-sm font-medium text-gray-800">&#128101; Groupe 2</span>
+                </label>
+              </div>
+              <p class="text-xs text-gray-400 mt-1">Vous pouvez sélectionner plusieurs groupes</p>
+            </div>
+
+            <!-- Boutons -->
+            <div class="flex gap-3 pt-2">
+              <button type="button" onclick="closeReservationModal()" class="flex-1 py-3 border border-gray-200 text-gray-700 font-medium rounded-xl hover:bg-gray-50 transition-all">
+                Annuler
+              </button>
+              <button type="submit" class="flex-1 py-3 bg-gradient-to-r from-blue-900 to-blue-600 text-white font-medium rounded-xl hover:from-blue-800 hover:to-blue-500 transition-all shadow-md">
+                &#10003; Confirmer la r&#233;servation
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+      <!-- Toast Notification -->
+      <div
+        id="toast"
+        class="hidden fixed top-6 right-6 bg-green-600 text-white px-6 py-4 rounded-xl shadow-lg z-50 flex items-center gap-3 fade-in"
+      >
+        <svg
+          class="w-5 h-5"
+          fill="none"
+          stroke="currentColor"
+          viewbox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M5 13l4 4L19 7"
+          /></svg
+        ><span id="toast-message">Opération réussie</span>
+      </div>
+    </div>
+    <script>
+      // Configuration par défaut
+      const defaultConfig = {
+        university_name: 'ISET Rades',
+        faculty_name: 'Informatique'
+      };
+
+      let currentRole = 'enseignant';
+
+      // Afficher formulaire inscription
+      function showSignupForm() {
+        document.getElementById('login-page').classList.add('hidden');
+        document.getElementById('signup-page').classList.remove('hidden');
+      }
+
+      // Masquer formulaire inscription
+      function hideSignupForm() {
+        document.getElementById('signup-page').classList.add('hidden');
+        document.getElementById('login-page').classList.remove('hidden');
+      }
+
+      // Traiter inscription
+      function handleSignup(e) {
+        e.preventDefault();
+        showToast('Inscription réussie ! Bienvenue !');
+        setTimeout(() => {
+          document.getElementById('signup-page').classList.add('hidden');
+          document.getElementById('login-page').classList.add('hidden');
+
+          if (currentRole === 'enseignant') {
+            document.getElementById('teacher-dashboard').classList.remove('hidden');
+            document.getElementById('teacher-dashboard').classList.add('flex');
+          } else if (currentRole === 'chef') {
+            document.getElementById('admin-dashboard').classList.remove('hidden');
+            document.getElementById('admin-dashboard').classList.add('flex');
+          } else {
+            document.getElementById('student-dashboard').classList.remove('hidden');
+            document.getElementById('student-dashboard').classList.add('flex');
+          }
+        }, 1500);
+      }
+
+      // Initialisation du SDK
+      if (window.elementSdk) {
+        window.elementSdk.init({
+          defaultConfig,
+          onConfigChange: async (config) => {
+            document.getElementById('university-title').textContent = config.university_name || defaultConfig.university_name;
+            document.getElementById('faculty-title').textContent = config.faculty_name || defaultConfig.faculty_name;
+          },
+          mapToCapabilities: (config) => ({
+            recolorables: [],
+            borderables: [],
+            fontEditable: undefined,
+            fontSizeable: undefined
+          }),
+          mapToEditPanelValues: (config) => new Map([
+            ['university_name', config.university_name || defaultConfig.university_name],
+            ['faculty_name', config.faculty_name || defaultConfig.faculty_name]
+          ])
+        });
+      }
+
+      // Sélection du rôle
+      function selectRole(role) {
+        currentRole = role;
+        document.querySelectorAll('[id^="role-"]').forEach(btn => {
+          btn.classList.remove('bg-blue-900', 'text-white');
+          btn.classList.add('text-gray-600', 'hover:bg-gray-200');
+        });
+        document.getElementById(`role-${role}`).classList.remove('text-gray-600', 'hover:bg-gray-200');
+        document.getElementById(`role-${role}`).classList.add('bg-blue-900', 'text-white');
+
+        // Afficher toujours les liens d'inscription (y compris pour le Chef de Département)
+        const loginLinks = document.getElementById('login-links');
+        loginLinks.classList.remove('hidden');
+      }
+
+      // Connexion
+      function handleLogin(e) {
+        e.preventDefault();
+        document.getElementById('login-page').classList.add('hidden');
+
+        if (currentRole === 'enseignant') {
+          document.getElementById('teacher-dashboard').classList.remove('hidden');
+          document.getElementById('teacher-dashboard').classList.add('flex');
+        } else if (currentRole === 'chef') {
+          document.getElementById('admin-dashboard').classList.remove('hidden');
+          document.getElementById('admin-dashboard').classList.add('flex');
+        } else {
+          document.getElementById('student-dashboard').classList.remove('hidden');
+          document.getElementById('student-dashboard').classList.add('flex');
+        }
+      }
+
+      // Déconnexion
+      function logout() {
+        document.querySelectorAll('[id$="-dashboard"]').forEach(el => {
+          el.classList.add('hidden');
+          el.classList.remove('flex');
+        });
+        document.getElementById('login-page').classList.remove('hidden');
+      }
+
+      // Navigation Enseignant
+      function showTeacherSection(section) {
+        document.querySelectorAll('[id^="section-"]').forEach(el => el.classList.add('hidden'));
+        document.getElementById(`section-${section}`).classList.remove('hidden');
+
+        document.querySelectorAll('#teacher-dashboard .sidebar-item').forEach(item => {
+          item.classList.remove('active');
+        });
+        event.currentTarget.classList.add('active');
+      }
+
+      // Navigation Admin
+      function showAdminSection(section) {
+        document.querySelectorAll('[id^="admin-section-"]').forEach(el => el.classList.add('hidden'));
+        document.getElementById(`admin-section-${section}`).classList.remove('hidden');
+
+        document.querySelectorAll('#admin-dashboard .sidebar-item').forEach(item => {
+          item.classList.remove('active');
+        });
+        event.currentTarget.classList.add('active');
+      }
+
+      // Navigation Étudiant
+      function showStudentSection(section) {
+        document.querySelectorAll('[id^="student-section-"]').forEach(el => el.classList.add('hidden'));
+        document.getElementById(`student-section-${section}`).classList.remove('hidden');
+
+        document.querySelectorAll('#student-dashboard .sidebar-item').forEach(item => {
+          item.classList.remove('active');
+        });
+        event.currentTarget.classList.add('active');
+      }
+
+      // Modal de réservation
+      function openReservationModal(salle) {
+        document.getElementById('reservation-modal').classList.remove('hidden');
+        if (salle) {
+          document.getElementById('modal-salle').value = salle;
+        }
+        // Définir la date minimale à aujourd'hui
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('modal-date').min = today;
+      }
+
+      function closeReservationModal() {
+        document.getElementById('reservation-modal').classList.add('hidden');
+      }
+
+      // Filtrer les salles selon le type sélectionné (Salle ou Amphi)
+      function filterSallesDisponibles(type) {
+        const sallesGroup = document.getElementById('salles-group');
+        const amphisGroup = document.getElementById('amphitheatres-group');
+        const modalSalle = document.getElementById('modal-salle');
+        const typeSalleLabel = document.getElementById('type-salle-label');
+        const typeAmphiLabel = document.getElementById('type-amphi-label');
+
+        // Réinitialiser la sélection
+        modalSalle.value = '';
+
+        if (type === 'amphi') {
+          sallesGroup.style.display = 'none';
+          amphisGroup.style.display = '';
+          typeSalleLabel.className = 'flex items-center gap-3 p-3 border-2 border-gray-200 bg-white rounded-xl cursor-pointer transition-all hover:border-blue-300';
+          typeAmphiLabel.className = 'flex items-center gap-3 p-3 border-2 border-blue-500 bg-blue-50 rounded-xl cursor-pointer transition-all';
+        } else {
+          sallesGroup.style.display = '';
+          amphisGroup.style.display = 'none';
+          typeSalleLabel.className = 'flex items-center gap-3 p-3 border-2 border-blue-500 bg-blue-50 rounded-xl cursor-pointer transition-all';
+          typeAmphiLabel.className = 'flex items-center gap-3 p-3 border-2 border-gray-200 bg-white rounded-xl cursor-pointer transition-all hover:border-blue-300';
+        }
+      }
+
+      // Mettre à jour les heures de fin selon l'heure de début
+      function updateHeuresFin() {
+        const debut = document.getElementById('modal-heure-debut').value;
+        const finSelect = document.getElementById('modal-heure-fin');
+        const heuresFin = ['09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00'];
+        const debutNum = parseInt(debut.replace(':', ''));
+
+        finSelect.innerHTML = '';
+        heuresFin.forEach(h => {
+          const hNum = parseInt(h.replace(':', ''));
+          if (hNum > debutNum) {
+            const opt = document.createElement('option');
+            opt.value = h;
+            opt.textContent = h;
+            finSelect.appendChild(opt);
+          }
+        });
+      }
+
+      // Mettre à jour le style des checkbox de groupe
+      function updateGroupeStyle(checkbox) {
+        const label = checkbox.closest('.group-checkbox-label');
+        if (checkbox.checked) {
+          label.classList.remove('border-gray-200', 'bg-white');
+          label.classList.add('border-blue-500', 'bg-blue-50');
+        } else {
+          label.classList.remove('border-blue-500', 'bg-blue-50');
+          label.classList.add('border-gray-200', 'bg-white');
+        }
+      }
+
+      // Soumettre réservation
+      function submitReservation(e) {
+        e.preventDefault();
+        closeReservationModal();
+        showToast('Demande de réservation envoyée avec succès !');
+      }
+
+      // Mettre à jour le style des checkbox de groupe (messages)
+      function updateMessageGroupeStyle(checkbox) {
+        const label = checkbox.closest('.msg-group-checkbox-label');
+        if (checkbox.checked) {
+          label.classList.remove('border-gray-200', 'bg-white');
+          label.classList.add('border-blue-500', 'bg-blue-50');
+        } else {
+          label.classList.remove('border-blue-500', 'bg-blue-50');
+          label.classList.add('border-gray-200', 'bg-white');
+        }
+      }
+
+      // Soumettre réclamation
+      function submitReclamation(e) {
+        e.preventDefault();
+        showToast('Réclamation envoyée avec succès !');
+      }
+
+      // Soumettre message enseignant
+      function submitMessageTeacher(e) {
+        e.preventDefault();
+        showToast('Message envoyé aux étudiants !');
+      }
+
+      // Chatbot
+      function toggleChatbot() {
+        const chatbot = document.getElementById('chatbot-window');
+        chatbot.classList.toggle('hidden');
+      }
+
+      // Toast notification
+      function showToast(message) {
+        const toast = document.getElementById('toast');
+        document.getElementById('toast-message').textContent = message;
+        toast.classList.remove('hidden');
+        setTimeout(() => {
+          toast.classList.add('hidden');
+        }, 3000);
+      }
+      // -------------------------------------------------------
+      // FILTRES - Liste des salles
+      // -------------------------------------------------------
+
+      // Données des salles (département, matériaux, heure début, heure fin)
+      const sallesData = {
+        'row-I1':      { dept: 'informatique', mats: ['projecteur','pcs'],           debut: '08:00', fin: '10:00', dispo: true },
+        'row-I5':      { dept: 'informatique', mats: ['projecteur','tableau'],        debut: '08:00', fin: '10:00', dispo: false },
+        'row-I8':      { dept: 'informatique', mats: ['pcs','projecteur'],            debut: '00:00', fin: '00:00', dispo: true },
+        'row-Amphi2':  { dept: 'informatique', mats: ['projecteur','micro'],          debut: '10:00', fin: '12:00', dispo: false },
+      };
+
+      // Ouvrir/fermer le panneau de filtres
+      function toggleFiltres() {
+        const panneau = document.getElementById('panneau-filtres');
+        panneau.classList.toggle('hidden');
+      }
+
+      // Appliquer les filtres
+      function appliquerFiltres() {
+        const dept   = document.getElementById('filtre-dept').value.toLowerCase();
+        const temps  = document.getElementById('filtre-temps').value;
+        const duree  = parseFloat(document.getElementById('filtre-duree').value || 0);
+
+        // Matériaux cochés
+        const matsCoches = ['projecteur','pcs','tableau','micro'].filter(m =>
+          document.getElementById('mat-' + m).checked
+        );
+
+        let visible = 0;
+        Object.entries(sallesData).forEach(([rowId, data]) => {
+          const row = document.getElementById(rowId);
+          if (!row) return;
+
+          let ok = true;
+
+          // Filtre département
+          if (dept && data.dept !== dept) ok = false;
+
+          // Filtre matériaux (la salle doit avoir TOUS les matériaux cochés)
+          if (ok && matsCoches.length > 0) {
+            const tousPresents = matsCoches.every(m => data.mats.includes(m));
+            if (!tousPresents) ok = false;
+          }
+
+          // Filtre heure : salle dispo → toujours ok, salle occupée → vérifier conflit
+          if (ok && temps && !data.dispo) {
+            const heureDebut = parseInt(temps.replace(':', ''));
+            const occDebut   = parseInt(data.debut.replace(':', ''));
+            const occFin     = parseInt(data.fin.replace(':', ''));
+            // Si l'heure souhaitée tombe dans la plage d'occupation → masquer
+            if (heureDebut >= occDebut && heureDebut < occFin) ok = false;
+          }
+
+          // Filtre durée : pour les salles occupées, vérifier si la durée rentre avant la fin d'occupation
+          if (ok && duree > 0 && temps && !data.dispo) {
+            const heureDebut  = parseInt(temps.replace(':', ''));
+            const heureFin    = heureDebut + duree * 100;
+            const occFin      = parseInt(data.fin.replace(':', ''));
+            if (heureFin > occFin) ok = false;
+          }
+
+          row.style.display = ok ? '' : 'none';
+          if (ok) visible++;
+        });
+
+        // Mettre à jour le compteur
+        const label = document.getElementById('filtre-count-label');
+        if (label) label.textContent = visible;
+
+        // Badge sur le bouton
+        const nbFiltres = (dept ? 1 : 0) + matsCoches.length + (temps ? 1 : 0) + (duree ? 1 : 0);
+        const badge = document.getElementById('filtre-count');
+        if (badge) {
+          badge.textContent = nbFiltres;
+          badge.classList.toggle('hidden', nbFiltres === 0);
+        }
+      }
+
+      // Réinitialiser tous les filtres
+      function reinitialiserFiltres() {
+        document.getElementById('filtre-dept').value = '';
+        document.getElementById('filtre-temps').value = '';
+        document.getElementById('filtre-duree').value = '';
+        ['projecteur','pcs','tableau','micro'].forEach(m => {
+          document.getElementById('mat-' + m).checked = false;
+        });
+
+        // Réafficher toutes les lignes
+        Object.keys(sallesData).forEach(rowId => {
+          const row = document.getElementById(rowId);
+          if (row) row.style.display = '';
+        });
+
+        const label = document.getElementById('filtre-count-label');
+        if (label) label.textContent = Object.keys(sallesData).length;
+
+        const badge = document.getElementById('filtre-count');
+        if (badge) { badge.textContent = '0'; badge.classList.add('hidden'); }
+      }
+      // -------------------------------------------------------
+      // CRUD - Gestion des emplois du temps (Admin)
+      // -------------------------------------------------------
+
+      const classeNames = {
+        'L1-INFO': '1ère Licence Info',
+        'L2-INFO': '2ème Licence Info',
+        'L3-INFO': '3ème Licence Info',
+        'L1-TIC': '1ère Licence TIC',
+        'L2-TIC': '2ème Licence TIC',
+        'L3-TIC': '3ème Licence TIC',
+        'M1-GL': 'Mastère 1 GL',
+        'M2-GL': 'Mastère 2 GL',
+        'M1-RSI': 'Mastère 1 RSI',
+        'M2-RSI': 'Mastère 2 RSI'
+      };
+
+      // Données des emplois du temps
+      let emploisData = [
+        { classe: 'L2-INFO', groupes: ['Groupe 1'], matiere: 'Algorithmique', enseignant: 'Prof. Ahmed Benali', jour: 'Lundi', creneau: '08:30 - 10:00', salle: 'I1' },
+        { classe: 'L2-INFO', groupes: ['Groupe 2'], matiere: 'Base de données', enseignant: 'Prof. Khalid Mansouri', jour: 'Mercredi', creneau: '08:30 - 10:00', salle: 'I3' },
+        { classe: 'L2-INFO', groupes: ['Groupe 1', 'Groupe 2'], matiere: 'Réseaux', enseignant: 'Prof. Sara Amrani', jour: 'Mardi', creneau: '10:00 - 11:30', salle: 'Amphi 1' },
+        { classe: 'L3-INFO', groupes: ['Groupe 1'], matiere: 'Programmation Web', enseignant: 'Prof. Youssef Tazi', jour: 'Vendredi', creneau: '08:30 - 10:00', salle: 'I8' },
+        { classe: 'L1-TIC', groupes: ['Groupe 1', 'Groupe 2'], matiere: 'Introduction Informatique', enseignant: 'Prof. Nadia Korbi', jour: 'Lundi', creneau: '10:00 - 11:30', salle: 'Amphi 2' },
+        { classe: 'L2-INFO', groupes: ['Groupe 1'], matiere: 'Rattrapage Algo', enseignant: 'Prof. Ahmed Benali', jour: 'Samedi', creneau: '10:00 - 11:30', salle: 'I3' },
+      ];
+
+      // Rendu du tableau
+      function renderEmplois() {
+        const tbody = document.getElementById('emplois-table-body');
+        const emptyState = document.getElementById('emplois-empty-state');
+        const filtreClasse = document.getElementById('filtre-emploi-classe')?.value || '';
+        const filtreJour = document.getElementById('filtre-emploi-jour')?.value || '';
+
+        let filtered = emploisData.filter(e => {
+          if (filtreClasse && e.classe !== filtreClasse) return false;
+          if (filtreJour && e.jour !== filtreJour) return false;
+          return true;
+        });
+
+        if (filtered.length === 0) {
+          tbody.innerHTML = '';
+          emptyState.classList.remove('hidden');
+          return;
+        }
+
+        emptyState.classList.add('hidden');
+
+        tbody.innerHTML = filtered.map((e, filteredIdx) => {
+          const realIdx = emploisData.indexOf(e);
+          const groupeBadges = e.groupes.map(g =>
+            `<span class="px-2 py-0.5 bg-blue-50 text-blue-700 text-xs rounded-full">${g}</span>`
+          ).join(' ');
+
+          return `<tr class="hover:bg-gray-50 transition-all">
+            <td class="px-6 py-4">
+              <span class="font-medium text-gray-800">${classeNames[e.classe] || e.classe}</span>
+            </td>
+            <td class="px-6 py-4">
+              <div class="flex flex-wrap gap-1">${groupeBadges}</div>
+            </td>
+            <td class="px-6 py-4">
+              <span class="font-medium text-gray-800">${e.matiere}</span>
+            </td>
+            <td class="px-6 py-4 text-gray-600">${e.enseignant}</td>
+            <td class="px-6 py-4">
+              <span class="px-2.5 py-1 bg-gray-100 text-gray-700 text-xs font-medium rounded-lg">${e.jour}</span>
+            </td>
+            <td class="px-6 py-4 text-gray-600 font-medium">${e.creneau}</td>
+            <td class="px-6 py-4">
+              <span class="px-2.5 py-1 bg-amber-50 text-amber-700 text-xs font-medium rounded-lg">${e.salle}</span>
+            </td>
+            <td class="px-6 py-4">
+              <div class="flex gap-2 justify-center">
+                <button onclick="editEmploi(${realIdx})" class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-all" title="Modifier">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                  </svg>
+                </button>
+                <button onclick="deleteEmploi(${realIdx})" class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-all" title="Supprimer">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                  </svg>
+                </button>
+              </div>
+            </td>
+          </tr>`;
+        }).join('');
+      }
+
+      // Ouvrir le modal (ajout)
+      function openEmploiModal() {
+        document.getElementById('emploi-modal-title').textContent = 'Ajouter une séance';
+        document.getElementById('emploi-submit-btn').innerHTML = '&#10003; Enregistrer';
+        document.getElementById('emploi-edit-index').value = -1;
+
+        // Réinitialiser le formulaire
+        document.getElementById('emploi-classe').value = '';
+        document.getElementById('emploi-matiere').value = '';
+        document.getElementById('emploi-enseignant').value = '';
+        document.getElementById('emploi-jour').value = '';
+        document.getElementById('emploi-creneau').value = '';
+        document.getElementById('emploi-salle').value = '';
+
+        // Décocher les checkboxes
+        document.querySelectorAll('input[name="emploi_groupe"]').forEach(cb => {
+          cb.checked = false;
+          const label = cb.closest('.emploi-group-checkbox-label');
+          if (label) {
+            label.classList.remove('border-blue-500', 'bg-blue-50');
+            label.classList.add('border-gray-200');
+          }
+        });
+
+        document.getElementById('emploi-modal').classList.remove('hidden');
+      }
+
+      // Fermer le modal
+      function closeEmploiModal() {
+        document.getElementById('emploi-modal').classList.add('hidden');
+      }
+
+      // Soumettre le formulaire (ajout ou modification)
+      function submitEmploi(e) {
+        e.preventDefault();
+
+        const classe = document.getElementById('emploi-classe').value;
+        const matiere = document.getElementById('emploi-matiere').value;
+        const enseignant = document.getElementById('emploi-enseignant').value;
+        const jour = document.getElementById('emploi-jour').value;
+        const creneau = document.getElementById('emploi-creneau').value;
+        const salle = document.getElementById('emploi-salle').value;
+
+        const groupes = [];
+        document.querySelectorAll('input[name="emploi_groupe"]:checked').forEach(cb => {
+          groupes.push(cb.value);
+        });
+
+        if (groupes.length === 0) {
+          alert('Veuillez sélectionner au moins un groupe.');
+          return;
+        }
+
+        const entry = { classe, groupes, matiere, enseignant, jour, creneau, salle };
+        const editIndex = parseInt(document.getElementById('emploi-edit-index').value);
+
+        if (editIndex >= 0) {
+          emploisData[editIndex] = entry;
+          showToast('Séance modifiée avec succès !');
+        } else {
+          emploisData.push(entry);
+          showToast('Séance ajoutée avec succès !');
+        }
+
+        closeEmploiModal();
+        renderEmplois();
+      }
+
+      // Modifier un emploi
+      function editEmploi(index) {
+        const e = emploisData[index];
+
+        document.getElementById('emploi-modal-title').textContent = 'Modifier la séance';
+        document.getElementById('emploi-submit-btn').innerHTML = '&#10003; Mettre à jour';
+        document.getElementById('emploi-edit-index').value = index;
+
+        document.getElementById('emploi-classe').value = e.classe;
+        document.getElementById('emploi-matiere').value = e.matiere;
+        document.getElementById('emploi-enseignant').value = e.enseignant;
+        document.getElementById('emploi-jour').value = e.jour;
+        document.getElementById('emploi-creneau').value = e.creneau;
+        document.getElementById('emploi-salle').value = e.salle;
+
+        // Cocher les bons groupes
+        document.querySelectorAll('input[name="emploi_groupe"]').forEach(cb => {
+          const isChecked = e.groupes.includes(cb.value);
+          cb.checked = isChecked;
+          const label = cb.closest('.emploi-group-checkbox-label');
+          if (label) {
+            if (isChecked) {
+              label.classList.remove('border-gray-200');
+              label.classList.add('border-blue-500', 'bg-blue-50');
+            } else {
+              label.classList.remove('border-blue-500', 'bg-blue-50');
+              label.classList.add('border-gray-200');
+            }
+          }
+        });
+
+        document.getElementById('emploi-modal').classList.remove('hidden');
+      }
+
+      // Supprimer un emploi
+      function deleteEmploi(index) {
+        if (confirm('Êtes-vous sûr de vouloir supprimer cette séance ?')) {
+          emploisData.splice(index, 1);
+          renderEmplois();
+          showToast('Séance supprimée.');
+        }
+      }
+
+      // Style checkbox emploi
+      function updateEmploiGroupeStyle(checkbox) {
+        const label = checkbox.closest('.emploi-group-checkbox-label');
+        if (checkbox.checked) {
+          label.classList.remove('border-gray-200');
+          label.classList.add('border-blue-500', 'bg-blue-50');
+        } else {
+          label.classList.remove('border-blue-500', 'bg-blue-50');
+          label.classList.add('border-gray-200');
+        }
+      }
+
+      // Rendu initial
+      renderEmplois();
+
+    </script>
+    <script>
+      (function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9e2685ecd38ae1ac',t:'MTc3NDUzMTk2NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();
+    </script>
+  </body>
+</html>
