@@ -48,23 +48,12 @@
         </div>
 
         <div class="flex gap-2">
-
-            @if($rec->statut == 'en_attente')
                 <form method="POST" action="{{ route('reclamations.traiter', $rec->id) }}">
                     @csrf
                     <button class="px-3 py-1.5 bg-green-100 text-green-700 text-sm rounded-lg hover:bg-green-200">
                         Traiter
                     </button>
                 </form>
-
-                <form method="POST" action="{{ route('reclamations.archiver', $rec->id) }}">
-                    @csrf
-                    <button class="px-3 py-1.5 bg-gray-100 text-gray-600 text-sm rounded-lg hover:bg-gray-200">
-                        Archiver
-                    </button>
-                </form>
-            @endif
-
         </div>
     </div>
     

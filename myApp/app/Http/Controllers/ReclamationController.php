@@ -20,7 +20,7 @@ class ReclamationController extends Controller
     public function traiter($id)
     {
         $rec = Reclamation::findOrFail($id);
-        $rec->update(['statut' => 'traite']);
+        $rec->delete();
 
         return back();
     }
