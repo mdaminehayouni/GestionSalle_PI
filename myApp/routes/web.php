@@ -5,6 +5,7 @@ use App\Http\Controllers\GestionEnseignantController;
 use App\Http\Controllers\GestionSalleController;
 use App\Http\Controllers\GestionSeanceController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ReclamationController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -69,6 +70,13 @@ Route::delete('/chef/seance/{id}', [GestionSeanceController::class, 'destroy'])
 Route::get('/salles-disponibles', [GestionSeanceController::class, 'disponibles']);
 
 Route::get('/enseignants-disponibles', [GestionSeanceController::class, 'enseignantsDisponibles']);
+
+Route::get('/reclamation', [ReclamationController::class, 'index'])
+    ->name('chef.reclamation');
+
+Route::post('/reclamation/{id}/traiter', [ReclamationController::class, 'traiter'])->name('reclamations.traiter');
+
+Route::post('/reclamation/{id}/archiver', [ReclamationController::class, 'archiver'])->name('reclamations.archiver');
 //--------------------------------------------------
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
