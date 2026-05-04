@@ -36,7 +36,11 @@
                 <!-- Name -->
                 <div>
                     <x-input-label for="name" value="Nom" />
-                    <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" required placeholder="Mohamed Amine Hayouni" value="{{ old('name') }}"/>
+                    <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" required placeholder="Hayouni" value="{{ old('name') }}"/>
+                </div>
+                <div>
+                    <x-input-label for="prenom" value="Prenom" />
+                    <x-text-input id="prenom" class="block mt-1 w-full" type="text" name="prenom" required placeholder="Mohamed Amine" value="{{ old('prenom') }}"/>
                 </div>
 
                 <!-- Email -->
@@ -60,7 +64,18 @@
                     </p>
                 @enderror
             </div>
+            <div>
+                <x-input-label for="classe_id" value="Classe" />
+                <select id="classe_id" name="classe_id" class="block mt-1 w-full px-4 py-3 border rounded-xl outline-none transition focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+                    <option value="">Choisir Votre classe</option>
 
+                    @foreach($classes as $classe)
+                        <option value="{{ $classe->id }}">
+                            {{ $classe->libelle }} (Niveau {{ $classe->niveau }})
+                        </option>
+                    @endforeach
+                </select>
+            </div>
                 <!-- Password -->
                 <div>
                     <x-input-label for="password" value="Mot de passe" />

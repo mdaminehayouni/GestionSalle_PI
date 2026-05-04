@@ -1,11 +1,14 @@
 <head>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
+
 <body class="flex min-h-screen">
 
-    @include('chef.sidebar')
+    {{-- SIDEBAR ÉTUDIANT --}}
+    @include('etudiant.sidebar')
 
-    <main class="flex-1 p-6 bg-gray-100 ml-64">
+    {{-- CONTENT --}}
+    <main class="flex-1 p-6 bg-gray-100">
         @yield('content')
     </main>
 

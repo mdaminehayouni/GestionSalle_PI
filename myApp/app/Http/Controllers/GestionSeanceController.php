@@ -7,7 +7,6 @@ use App\Models\Classe;
 use App\Models\Enseignant;
 use App\Models\Salle;
 use App\Models\Seance;
-use App\Models\User;
 use Illuminate\Http\Request;
 
 class GestionSeanceController extends Controller
@@ -78,6 +77,34 @@ class GestionSeanceController extends Controller
 
         return response()->json($enseignants);
     }
+    public function classesDisponibles(Request $request)
+    {
+        $date = $request->date;
+        $debut = $request->heure_deb;
+        $fin = $request->heure_fin;
+        $seanceId = $request->seance_id;
+
+        $classes = Classe::whereDoesntHave('seances', function ($q) use ($date, $debut, $fin, $seanceId) {
+
+            $q->where('date', $date)
+            ->where(function ($x) use ($debut, $fin) {
+
+                $x->whereBetween('heure_deb', [$debut, $fin])
+                    ->orWhereBetween('heure_fin', [$debut, $fin])
+                    ->orWhere(function ($y) use ($debut, $fin) {
+                        $y->where('heure_deb', '<=', $debut)
+                        ->where('heure_fin', '>=', $fin);
+                    });
+
+            })
+            ->when($seanceId, function ($q) use ($seanceId) {
+                $q->where('id', '!=', $seanceId);
+            });
+
+        })->get();
+
+        return response()->json($classes);
+    }
     /**
      * Show the form for creating a new resource.
      */
@@ -144,7 +171,6 @@ class GestionSeanceController extends Controller
             'classeId' => 'required',
             'salleId' => 'required',
         ]);
-
         $seance = Seance::findOrFail($id);
 
         $seance->update([

@@ -131,7 +131,7 @@
                 class="w-full mb-3 border rounded-lg px-3 py-2"
                 onchange="filterAll()" required>
                 <option value="">Horaire</option>
-                <option value="08:30-10:30">08:30 - 10:30</option>
+                <option value="08:30-10:30">08:30 - 10:00</option>
                 <option value="10:15-11:45">10:15 - 11:45</option>
                 <option value="12:00-13:30">12:00 - 13:30</option>
                 <option value="13:30-15:00">13:30 - 15:00</option>
@@ -152,9 +152,7 @@
             <p>Classe</p>
             <select name="classeId" id="classe"
                 class="w-full mb-3 border rounded-lg px-3 py-2">
-                @foreach($classes as $c)
-                    <option value="{{ $c->id }}">{{ $c->libelle }}</option>
-                @endforeach
+                <option value="">Choisir une Classe</option>
             </select>
 
             <p>Salle</p>
@@ -194,7 +192,11 @@ window.sallesMap = {
         '{{ $salle->id }}': '{{ $salle->nomSalle }}',
     @endforeach
 };
-
+window.classesMap = {
+    @foreach($classes as $c)
+        '{{ $c->id }}': '{{ $c->libelle }}',
+    @endforeach
+};
 window.enseignantsMap = {
     @foreach($enseignants as $e)
         '{{ $e->id }}': '{{ $e->nom }} {{ $e->prenom }}',
@@ -225,12 +227,14 @@ function editSeance(id, matiere, date, hd, hf, ensId, classeId, salleId) {
     document.getElementById('seanceForm').action = `/chef/seance/${id}`;
     document.getElementById('methodField').value = "PUT";
 
+    
     document.getElementById('matiere').value = matiere;
     document.getElementById('date').value = date;
     document.getElementById('horaire').value = `${hd}-${hf}`;
     document.getElementById('classe').value = classeId;
 
     // Stocker les IDs actuels pour les ajouter après le filtre
+    window.currentClasseId = classeId;
     window.currentEnseignantId = ensId;
     window.currentSalleId = salleId;
 
@@ -247,6 +251,39 @@ function filterAll(seanceId = null) {
     if (!date || !horaire) return;
 
     let [debut, fin] = horaire.split("-").map(s => s.trim());
+    // CLASSES
+    // CLASSES
+fetch(`/classes-disponibles?date=${date}&heure_deb=${debut}&heure_fin=${fin}&seance_id=${seanceId}`)
+    .then(res => res.json())
+    .then(data => {
+        let select = document.getElementById('classe');
+        select.innerHTML = `<option value="">Choisir une classe</option>`;
+
+        data.forEach(c => {
+            select.innerHTML += `<option value="${c.id}">${c.libelle}</option>`;
+        });
+
+        // garder classe actuelle si edit
+        if (window.currentClasseId) {
+
+            let exists = false;
+            for (let option of select.options) {
+                if (option.value == window.currentClasseId) {
+                    exists = true;
+                    break;
+                }
+            }
+
+            if (!exists) {
+                let option = document.createElement('option');
+                option.value = window.currentClasseId;
+                option.text = (window.classesMap?.[window.currentClasseId] || 'Classe') + ' (Actuelle)';
+                select.appendChild(option);
+            }
+
+            select.value = window.currentClasseId;
+        }
+    });
 
     // SALLES
     fetch(`/salles-disponibles?date=${date}&heure_deb=${debut}&heure_fin=${fin}&seance_id=${seanceId}`)

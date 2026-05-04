@@ -1,5 +1,15 @@
-<aside class="w-64 bg-gradient-to-b from-slate-800 to-slate-900 text-white flex flex-col">
+<aside class="w-64 bg-gradient-to-b from-slate-800 to-slate-900 text-white flex flex-col fixed left-0 top-0 h-full z-10">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 
+<style>
+.material-symbols-outlined {
+  font-variation-settings:
+  'FILL' 0,
+  'wght' 200,
+  'GRAD' 0,
+  'opsz' 24
+}
+</style>
     <!-- HEADER -->
     <div class="p-6 border-b border-white/10">
         <div class="flex items-center gap-3">
@@ -30,7 +40,13 @@
 
             Tableau de bord
         </a>
-
+        <a href="{{ route('chef.gestionClasse') }}"
+           class="sidebar-item flex items-center gap-3 px-4 py-3 rounded-xl text-sm">
+            <span class="material-symbols-outlined">
+                book
+            </span>
+            Classe
+        </a>
         <!-- ENSEIGNANTS -->
         <a href="{{ route('chef.gestionEnseignant') }}"
            class="sidebar-item flex items-center gap-3 px-4 py-3 rounded-xl text-sm
@@ -45,28 +61,26 @@
         <!-- SALLES -->
         <a href="{{ route('chef.gestionSalle') }}"
            class="sidebar-item flex items-center gap-3 px-4 py-3 rounded-xl text-sm">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7"/>
-            </svg>
+            <span class="material-symbols-outlined">
+                meeting_room
+            </span>
             Gestion des salles
         </a>
         <a href="{{ route('chef.gestionSeance') }}"
            class="sidebar-item flex items-center gap-3 px-4 py-3 rounded-xl text-sm">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7"/>
-            </svg>
+            <span class="material-symbols-outlined">
+                calendar_today
+            </span>
             Gestion des Seances
         </a>
         <a href="{{ route('chef.reclamation') }}"
            class="sidebar-item flex items-center gap-3 px-4 py-3 rounded-xl text-sm">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7"/>
-            </svg>
+            <span class="material-symbols-outlined">
+                warning
+            </span>
             Reclamation
         </a>
+        
 
 
     </nav>

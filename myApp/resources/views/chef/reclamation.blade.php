@@ -33,16 +33,6 @@
                 <p class="text-xs text-gray-400 mt-2">
                     {{ \Carbon\Carbon::parse($rec->created_at)->diffForHumans() }}
                 </p>
-
-                <p class="text-xs mt-1">
-                    Status: 
-                    <span class="
-                        {{ $rec->statut == 'traite' ? 'text-green-600' : '' }}
-                        {{ $rec->statut == 'archive' ? 'text-gray-500' : '' }}
-                    ">
-                        {{ $rec->statut }}
-                    </span>
-                </p>
             </div>
 
         </div>

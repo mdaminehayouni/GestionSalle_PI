@@ -1,6 +1,9 @@
 <?php
 
+use App\Http\Controllers\Chef\ClasseController;
 use App\Http\Controllers\chef\DashboardController;
+use App\Http\Controllers\etudiant\DashboardController as EtudiantDashboard;
+use App\Http\Controllers\etudiant\EmploieController;
 use App\Http\Controllers\GestionEnseignantController;
 use App\Http\Controllers\GestionSalleController;
 use App\Http\Controllers\GestionSeanceController;
@@ -71,12 +74,34 @@ Route::get('/salles-disponibles', [GestionSeanceController::class, 'disponibles'
 
 Route::get('/enseignants-disponibles', [GestionSeanceController::class, 'enseignantsDisponibles']);
 
+Route::get('/classes-disponibles', [GestionSeanceController::class, 'classesDisponibles']);
+
 Route::get('/reclamation', [ReclamationController::class, 'index'])
     ->name('chef.reclamation');
 
 Route::post('/reclamation/{id}/traiter', [ReclamationController::class, 'traiter'])->name('reclamations.traiter');
 
 Route::post('/reclamation/{id}/archiver', [ReclamationController::class, 'archiver'])->name('reclamations.archiver');
+
+Route::prefix('chef')->group(function () {
+    Route::get('/classe', [ClasseController::class, 'index'])->name('chef.gestionClasse');
+    Route::post('/classe', [ClasseController::class, 'store'])->name('chef.classe.store');
+    Route::put('/classe/{id}', [ClasseController::class, 'update'])->name('chef.classe.update');
+    Route::delete('/classe/{id}', [ClasseController::class, 'destroy'])->name('chef.classe.destroy');
+});
+
+Route::prefix('etudiant')->middleware(['auth'])->group(function () {
+
+    Route::get('/dashboard', [EtudiantDashboard::class, 'dashboard'])
+        ->name('etudiant.dashboard');
+
+    Route::get('/emploie', [EmploieController::class, 'emploieEtudiant'])->name('etudiant.emploie');
+
+    Route::get('/notifications', function () {
+        return view('etudiant.notifications');
+    })->name('etudiant.notifications');
+
+});
 //--------------------------------------------------
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

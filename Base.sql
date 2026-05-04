@@ -50,19 +50,17 @@ CREATE TABLE IF NOT EXISTS `cache_locks` (
 
 -- Listage de la structure de table gestionsalles. classe
 CREATE TABLE IF NOT EXISTS `classe` (
-  `id` int NOT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
   `libelle` varchar(50) DEFAULT NULL,
   `niveau` int DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Listage des données de la table gestionsalles.classe : ~5 rows (environ)
 INSERT INTO `classe` (`id`, `libelle`, `niveau`) VALUES
-	(1, 'Informatique L1', 1),
-	(2, 'Informatique L2', 2),
-	(3, 'Informatique L3', 3),
-	(4, 'Math L1', 1),
-	(5, 'Math L2', 2);
+	(1, 'L2DSI2', 2),
+	(6, 'L2DSI1', 2),
+	(7, 'L2DSI3', 2);
 
 -- Listage de la structure de table gestionsalles. enseignants
 CREATE TABLE IF NOT EXISTS `enseignants` (
@@ -75,7 +73,7 @@ CREATE TABLE IF NOT EXISTS `enseignants` (
   CONSTRAINT `enseignants_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Listage des données de la table gestionsalles.enseignants : ~0 rows (environ)
+-- Listage des données de la table gestionsalles.enseignants : ~5 rows (environ)
 INSERT INTO `enseignants` (`id`, `user_id`, `nom`, `prenom`) VALUES
 	(3, 15, 'Ksouri', 'LeParfait'),
 	(4, 16, 'hayouni', 'med'),
@@ -85,19 +83,21 @@ INSERT INTO `enseignants` (`id`, `user_id`, `nom`, `prenom`) VALUES
 
 -- Listage de la structure de table gestionsalles. etudiant
 CREATE TABLE IF NOT EXISTS `etudiant` (
-  `carteEtudiant` int NOT NULL,
   `nom` varchar(50) DEFAULT NULL,
   `prenom` varchar(50) DEFAULT NULL,
-  `idclasse` int DEFAULT NULL,
-  `idUser` bigint unsigned NOT NULL AUTO_INCREMENT,
-  PRIMARY KEY (`carteEtudiant`),
-  KEY `FK_etudiant_classe` (`idclasse`),
-  KEY `FK_userId` (`idUser`),
-  CONSTRAINT `FK_etudiant_classe` FOREIGN KEY (`idclasse`) REFERENCES `classe` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `FK_userId` FOREIGN KEY (`idUser`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `classe_id` int DEFAULT NULL,
+  `user_id` bigint unsigned DEFAULT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`id`),
+  KEY `FK_userId` (`user_id`) USING BTREE,
+  KEY `FK_classe` (`classe_id`) USING BTREE,
+  CONSTRAINT `FK_classe` FOREIGN KEY (`classe_id`) REFERENCES `classe` (`id`),
+  CONSTRAINT `FK_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Listage des données de la table gestionsalles.etudiant : ~0 rows (environ)
+INSERT INTO `etudiant` (`nom`, `prenom`, `classe_id`, `user_id`, `id`) VALUES
+	('omar', 'Mekki', 1, 25, 1);
 
 -- Listage de la structure de table gestionsalles. failed_jobs
 CREATE TABLE IF NOT EXISTS `failed_jobs` (
@@ -188,13 +188,12 @@ CREATE TABLE IF NOT EXISTS `reclamations` (
   CONSTRAINT `reclamations_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Listage des données de la table gestionsalles.reclamations : ~0 rows (environ)
+-- Listage des données de la table gestionsalles.reclamations : ~4 rows (environ)
 INSERT INTO `reclamations` (`id`, `titre`, `description`, `type`, `statut`, `user_id`, `created_at`) VALUES
 	(6, 'Projecteur en panne - Salle A12', 'Le projecteur ne fonctionne pas depuis ce matin, impossible d’assurer le cours.', 'materiel', 'traite', 19, '2026-05-02 23:53:04'),
 	(7, 'Climatisation HS - Salle B05', 'La clim ne marche pas, la salle est très chaude pendant les cours.', 'materiel', 'archive', 15, '2026-05-02 23:53:04'),
-	(8, 'Retard de cours récurrent', 'Le professeur arrive souvent avec 20 minutes de retard.', 'organisation', 'traite', 16, '2026-05-02 23:53:04'),
-	(9, 'Chaise cassée en salle TP', 'Plusieurs chaises sont cassées dans la salle TP C2.', 'materiel', 'traite', 17, '2026-05-02 23:53:04'),
-	(10, 'Problème d’emploi du temps', 'Deux cours sont planifiés en même temps pour la même classe.', 'planning', 'archive', 18, '2026-05-02 23:53:04');
+	(8, 'Problème de Salle', 'Le tableau est cassé dans la salle I10.', 'organisation', 'archive', 16, '2026-05-02 23:53:04'),
+	(10, 'Problème de Salle', 'La salle I12 est bloqué elle ne s\'ouvre pas.', 'planning', 'archive', 18, '2026-05-02 23:53:04');
 
 -- Listage de la structure de table gestionsalles. salle
 CREATE TABLE IF NOT EXISTS `salle` (
@@ -206,7 +205,7 @@ CREATE TABLE IF NOT EXISTS `salle` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Listage des données de la table gestionsalles.salle : ~3 rows (environ)
+-- Listage des données de la table gestionsalles.salle : ~4 rows (environ)
 INSERT INTO `salle` (`id`, `nomSalle`, `capacite`, `type`, `disponibilite`) VALUES
 	(1, 'I10', 50, 'AMPHI', 1),
 	(2, 'I12', 200, 'NORMAL', 1),
@@ -225,17 +224,16 @@ CREATE TABLE IF NOT EXISTS `seance` (
   `salleId` int DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FK__enseignant` (`enseignantId`),
-  KEY `FK__classe` (`classeId`),
   KEY `FK_seanceSalle` (`salleId`),
-  CONSTRAINT `FK__classe` FOREIGN KEY (`classeId`) REFERENCES `classe` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  KEY `FK_seanceClasse` (`classeId`),
+  CONSTRAINT `FK_seanceClasse` FOREIGN KEY (`classeId`) REFERENCES `classe` (`id`),
   CONSTRAINT `FK_seanceSalle` FOREIGN KEY (`salleId`) REFERENCES `salle` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Listage des données de la table gestionsalles.seance : ~8 rows (environ)
+-- Listage des données de la table gestionsalles.seance : ~2 rows (environ)
 INSERT INTO `seance` (`id`, `matiere`, `date`, `heure_deb`, `heure_fin`, `enseignantId`, `classeId`, `salleId`) VALUES
-	(16, 'SID', '2026-05-09', '08:30:00', '10:30:00', 5, 1, 1),
-	(17, 'Francais', '2026-05-08', '08:30:00', '10:30:00', 7, 1, 1),
-	(18, 'Anglais', '2026-05-08', '08:30:00', '10:30:00', 6, 2, 2);
+	(20, 'math', '2026-05-04', '10:15:00', '11:45:00', 4, 1, 1),
+	(21, 'SID', '2026-05-05', '08:30:00', '10:00:00', 5, 1, 2);
 
 -- Listage de la structure de table gestionsalles. sessions
 CREATE TABLE IF NOT EXISTS `sessions` (
@@ -252,7 +250,7 @@ CREATE TABLE IF NOT EXISTS `sessions` (
 
 -- Listage des données de la table gestionsalles.sessions : ~1 rows (environ)
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-	('OheZOBzmJbyvSRdZwjPtUICuMtnEYTMMjdnycgQ9', 1, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36 Edg/147.0.0.0', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiaFByTk9SWmZTYWx1eWQ5ZVdUWlU2YkdpYWpPSUVYOWVnUnJvY0k2VyI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6NDA6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9yZWNsYW1hdGlvbj9wYWdlPTEiO3M6NToicm91dGUiO3M6MTY6ImNoZWYucmVjbGFtYXRpb24iO31zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aToxO30=', 1777766391);
+	('cOO5Vu4YcWLsmCrLLbzF1WOGd0VTXygNUQGy5oDE', 25, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36 Edg/147.0.0.0', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiNmtYVjdEelJ3MEZQcVBaVEQ4Ynp3NmdManJ5MWxrN01zS2RTMVJjaCI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6NDA6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9ldHVkaWFudC9kYXNoYm9hcmQiO3M6NToicm91dGUiO3M6MTg6ImV0dWRpYW50LmRhc2hib2FyZCI7fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjI1O30=', 1777881416);
 
 -- Listage de la structure de table gestionsalles. users
 CREATE TABLE IF NOT EXISTS `users` (
@@ -267,7 +265,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `role` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'etudiant',
   PRIMARY KEY (`id`),
   UNIQUE KEY `users_email_unique` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Listage des données de la table gestionsalles.users : ~7 rows (environ)
 INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `remember_token`, `created_at`, `updated_at`, `role`) VALUES
@@ -276,7 +274,8 @@ INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `re
 	(16, 'hayouni', 'hayouni@gmail.com', NULL, '$2y$12$eQ47kbK9SZk4FqOo8LTBQ.wtGuQt0HCzwE174LGWMLnv/AB4wgVaO', NULL, '2026-05-02 16:38:19', '2026-05-02 16:38:19', 'enseignant'),
 	(17, 'mokrani', 'salim@gmail.com', NULL, '$2y$12$R1EKzrVAY4HyLpfaDk/yZO9gFfy7HsUevnBQ7EqmBumy74NaNpXFi', NULL, '2026-05-02 16:39:16', '2026-05-02 16:39:16', 'enseignant'),
 	(18, 'lamouchi Macha', 'lamouchi@gmail.com', NULL, '$2y$12$agG3ojTcapaeG3dZ5p2JBuTKl9CZJ9i8/r35oI8LTc9gN5osJ8NKq', NULL, '2026-05-02 16:39:45', '2026-05-02 21:11:36', 'enseignant'),
-	(19, 'Aidoudi', 'aidoudi@gmail.com', NULL, '$2y$12$s4NYdCkvl1pQePcftATKkuHctEYniIPVRjzpcoy47q5lx/hBgM8ne', NULL, '2026-05-02 16:40:16', '2026-05-02 16:40:16', 'enseignant');
+	(19, 'Aidoudi', 'aidoudi@gmail.com', NULL, '$2y$12$s4NYdCkvl1pQePcftATKkuHctEYniIPVRjzpcoy47q5lx/hBgM8ne', NULL, '2026-05-02 16:40:16', '2026-05-02 16:40:16', 'enseignant'),
+	(25, 'omar', 'omar@gmail.com', NULL, '$2y$12$tpwq5ymGfBAh.UmZAAPR6OHYt9twfhZt4JeprvQEDo37.Dl71rwni', NULL, '2026-05-03 22:35:43', '2026-05-03 22:35:43', 'etudiant');
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

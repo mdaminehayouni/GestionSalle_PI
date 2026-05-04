@@ -6,7 +6,17 @@ use Illuminate\Database\Eloquent\Model;
 
 class Classe extends Model
 {
-    public $timestamps = false;
     protected $table = 'classe';
-    protected $fillable = ['libelle','niveau'];
+
+    protected $fillable = [
+        'libelle',
+        'niveau',
+    ];
+
+    public $timestamps = false;
+
+    public function seances()
+    {
+        return $this->hasMany(Seance::class, 'classeId');
+    }
 }

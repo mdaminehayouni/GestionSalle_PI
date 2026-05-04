@@ -33,7 +33,7 @@
                 </div>
             </div>
 
-            <h3 class="text-2xl font-bold text-gray-800">0</h3>
+            <h3 class="text-2xl font-bold text-gray-800">{{$countReclamation}}</h3>
             <p class="text-sm text-gray-500">Réclamations</p>
         </div>
 
