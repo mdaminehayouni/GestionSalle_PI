@@ -52,7 +52,7 @@
                            class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none {{ $errors->has('email') 
                         ? '!border-red-500 focus:!ring-red-500' 
                         : '!border-gray-200 focus:!ring-blue-500' }}"
-                           placeholder="exemple@univ.ma">
+                           placeholder="mdamine.hayouni@gmail.com">
                     @error('email')
                         <p class="text-red-500 text-sm mt-1">
                             {{ $message }}

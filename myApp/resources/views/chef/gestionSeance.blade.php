@@ -29,7 +29,7 @@
                     <th class="px-6 py-4 text-left">Matière</th>
                     <th class="px-6 py-4 text-left">Date</th>
                     <th class="px-6 py-4 text-left">Horaire</th>
-                    <th class="px-6 py-4 text-left">Enseignant</th>
+                    <th class="px-6 py-4 text-left">Enseignant(e)</th>
                     <th class="px-6 py-4 text-left">Classe</th>
                     <th class="px-6 py-4 text-left">Salle</th>
                     <th class="px-6 py-4 text-left">Actions</th>
@@ -103,7 +103,11 @@
             </tbody>
         </table>
     </div>
+<div class="mt-6">
+        {{$seances->links()}}
 </div>
+</div>
+
 
 {{-- MODAL --}}
 <div id="modal" class="fixed inset-0 bg-black/40 hidden items-center justify-center">
@@ -131,7 +135,7 @@
                 class="w-full mb-3 border rounded-lg px-3 py-2"
                 onchange="filterAll()" required>
                 <option value="">Horaire</option>
-                <option value="08:30-10:30">08:30 - 10:00</option>
+                <option value="08:30-10:00">08:30 - 10:00</option>
                 <option value="10:15-11:45">10:15 - 11:45</option>
                 <option value="12:00-13:30">12:00 - 13:30</option>
                 <option value="13:30-15:00">13:30 - 15:00</option>

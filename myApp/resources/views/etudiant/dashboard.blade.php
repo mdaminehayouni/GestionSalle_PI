@@ -37,18 +37,12 @@
 </div>
 
 {{-- STATS --}}
-<div class="grid grid-cols-3 gap-4">
+<div class="grid grid-cols-2 gap-4">
 
     <div class="bg-white p-5 rounded-2xl shadow-sm border">
         <p class="text-gray-500 text-sm">Cours</p>
         <p class="text-2xl font-bold text-gray-800">{{ $nbCours ?? 0 }}</p>
     </div>
-
-    <div class="bg-white p-5 rounded-2xl shadow-sm border">
-        <p class="text-gray-500 text-sm">Heures</p>
-        <p class="text-2xl font-bold text-gray-800">{{ $heures ?? 0 }}h</p>
-    </div>
-
     <div class="bg-white p-5 rounded-2xl shadow-sm border">
         <p class="text-gray-500 text-sm">Rattrapages</p>
         <p class="text-2xl font-bold text-orange-500">{{ $rattrapages ?? 0 }}</p>

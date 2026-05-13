@@ -16,7 +16,7 @@ class GestionSeanceController extends Controller
      */
     public function index()
     {
-        $seances = Seance::with(['salle', 'enseignant', 'classe'])->paginate(5);
+        $seances = Seance::with(['salle', 'enseignant', 'classe'])->paginate(7);
         $enseignants = Enseignant::all();
         $salles = Salle::all();
         $classes = Classe::all();
