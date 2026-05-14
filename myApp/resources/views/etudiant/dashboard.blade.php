@@ -49,5 +49,27 @@
     </div>
 
 </div>
+{{-- MESSAGES --}}
+<div class="mt-6 bg-white rounded-2xl shadow-sm p-6 border border-gray-100">
+
+    <h2 class="font-semibold text-gray-700 mb-4">Messages récents</h2>
+
+    @forelse($messages as $m)
+
+        <div class="border-b last:border-0 py-3">
+
+            <p class="font-semibold text-gray-800">
+                {{ $m->Message }}
+            </p>
+
+        </div>
+
+    @empty
+
+        <p class="text-gray-500">Aucun message</p>
+
+    @endforelse
+
+</div>
 
 @endsection

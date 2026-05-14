@@ -25,6 +25,9 @@
                 <p class="text-sm text-gray-500 mt-1">
                     Signalé par: {{ $rec->user->name ?? 'Unknown' }}
                 </p>
+                <p class="text-sm text-gray-500 mt-1">
+                    Salle: {{ $rec->salle->nomSalle ?? 'Unknown' }}
+                </p>
 
                 <p class="text-sm text-gray-600 mt-2">
                     {{ $rec->description }}

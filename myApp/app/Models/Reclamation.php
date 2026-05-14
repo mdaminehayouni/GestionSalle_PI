@@ -6,17 +6,26 @@ use Illuminate\Database\Eloquent\Model;
 
 class Reclamation extends Model
 {
-    public $timestamps = false;
     protected $table = 'reclamations';
+
     protected $fillable = [
         'titre',
         'description',
         'type',
         'statut',
-        'user_id'
+        'user_id',
+        'salleId',
     ];
+
+    public $timestamps = false;
+
+    public function salle()
+    {
+        return $this->belongsTo(Salle::class, 'salleId');
+    }
+
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

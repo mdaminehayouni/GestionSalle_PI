@@ -50,12 +50,10 @@
                 Emploi du temps
             </a>
 
-            <!--<a href="{{ route('etudiant.notifications') }}"
+            <a href="{{ route('etudiant.messages') }}"
                class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm sidebar-item">
-                Notifications
-
-                <span class="ml-auto px-2 py-0.5 bg-red-500 text-xs rounded-full">2</span>
-            </a>-->
+                Messages
+            </a>
 
         </nav>
 

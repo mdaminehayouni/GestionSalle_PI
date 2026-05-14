@@ -2,11 +2,13 @@
 
 use App\Http\Controllers\Chef\ClasseController;
 use App\Http\Controllers\chef\DashboardController;
+use App\Http\Controllers\enseignant\EnseignantController;
 use App\Http\Controllers\etudiant\DashboardController as EtudiantDashboard;
 use App\Http\Controllers\etudiant\EmploieController;
 use App\Http\Controllers\GestionEnseignantController;
 use App\Http\Controllers\GestionSalleController;
 use App\Http\Controllers\GestionSeanceController;
+use App\Http\Controllers\MessageController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReclamationController;
 use Illuminate\Support\Facades\Route;
@@ -101,7 +103,79 @@ Route::prefix('etudiant')->middleware(['auth'])->group(function () {
         return view('etudiant.notifications');
     })->name('etudiant.notifications');
 
+    Route::get('/message', [MessageController::class, 'messages'])
+    ->name('etudiant.messages');
+
 });
+
+//-------------------------------------------------------------------------------
+Route::prefix('enseignant')
+->name('enseignant.')
+->group(function () {
+
+    Route::get('/dashboard',
+        [EnseignantController::class, 'dashboard']
+    )->name('dashboard');
+
+    Route::get('/emploie',
+        [EnseignantController::class, 'emploie']
+    )->name('emploie');
+
+    Route::get('/messages',
+        [EnseignantController::class, 'messages']
+    )->name('messages');
+
+    Route::post('/messages/store',
+        [EnseignantController::class, 'storeMessage']
+    )->name('messages.store');
+
+    Route::get('/reclamations',
+        [EnseignantController::class, 'reclamations']
+    )->name('reclamations');
+
+    Route::post('/reclamations/store',
+        [EnseignantController::class, 'storeReclamation']
+    )->name('reclamations.store');
+
+    Route::delete('/reclamations/{id}',
+        [EnseignantController::class, 'destroyReclamation']
+    )->name('reclamations.destroy');
+
+    Route::get('/reservations',
+        [EnseignantController::class, 'reservations']
+    )->name('reservations');
+
+    Route::post('/reservations/store',
+        [EnseignantController::class, 'storeReservation']
+    )->name('reservations.store');
+
+    Route::delete('/reservations/{id}',
+        [EnseignantController::class, 'destroyReservation']
+    )->name('reservations.destroy');
+
+    Route::get('/salles',
+        [EnseignantController::class, 'salles']
+    )->name('salles');
+
+    Route::get('/salles-disponibles-reservation',
+        [EnseignantController::class, 'sallesDisponibles']
+    );
+});
+
+
+Route::get('/enseignant/classes-disponibles-reservation',
+    [EnseignantController::class, 'classesDisponiblesReservation']);
+
+Route::get('/enseignant/salles-disponibles-reservation',
+    [EnseignantController::class, 'sallesDisponiblesReservation']);
+
+
+Route::get('/enseignant/creneaux-disponibles', [EnseignantController::class, 'creneauxDisponibles']);
+
+Route::delete(
+    '/enseignant/reservations/{id}',
+    [EnseignantController::class, 'destroyReservation']
+)->name('enseignant.reservations.destroy');
 //--------------------------------------------------
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
