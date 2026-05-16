@@ -61,11 +61,11 @@
                     <td class="px-6 py-4 text-gray-600">
                         @if($salle->disponibilite)
                             <span class="px-3 py-1 bg-green-100 text-green-700 text-xs rounded-full">
-                                Disponible
+                                prête
                             </span>
                         @else
                             <span class="px-3 py-1 bg-red-100 text-red-700 text-xs rounded-full">
-                                Non disponible
+                                en préparation
                             </span>
                         @endif
                     </td>
