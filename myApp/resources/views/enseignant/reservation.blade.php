@@ -96,6 +96,7 @@
        required>
 
 {{-- DATE --}}
+<p id="jourAffiche" class="text-l text-gray-600"></p>
 <input type="date"
        name="date"
        id="date"
@@ -153,6 +154,18 @@ function openModal() {
 function closeModal() {
     document.getElementById('modal').classList.add('hidden');
 }
+document.getElementById('date').addEventListener('change', function () {
+    let date = this.value;
+
+    if (!date) return;
+
+    let [y, m, d] = date.split('-');
+
+    let jour = new Date(y, m - 1, d)
+        .toLocaleDateString('fr-FR', { weekday: 'long' });
+
+    document.getElementById('jourAffiche').textContent = "Jour : " + jour;
+});
 
 // Charger les créneaux disponibles quand la date change
 function loadCreneaux() {

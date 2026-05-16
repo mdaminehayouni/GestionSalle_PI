@@ -73,7 +73,7 @@
         <div class="flex items-center justify-between mb-5">
             <h2 class="text-lg font-bold flex items-center gap-2">
                 <span class="material-symbols-outlined">calendar_month</span>
-                Mes Séance
+                Mes prochaines séance d'aujourd'hui
             </h2>
 
             <a href="{{ route('enseignant.reservations') }}"
@@ -96,6 +96,9 @@
                         <div class="font-semibold text-sm">
                             {{ $r->salle->nomSalle ?? '' }}
                         </div>
+                        <div class="text-xs text-gray-500">
+                            {{ $r->classe->libelle ?? '' }}
+                        </div>
 
                         <div class="text-xs text-gray-500">
                             {{ \Carbon\Carbon::parse($r->date)->locale('fr')->dayName }} | {{ substr($r->heure_deb, 0, 5) }} - {{ substr($r->heure_fin, 0, 5) }}
@@ -111,7 +114,7 @@
             @empty
 
                 <div class="text-sm text-gray-500">
-                    Aucune réservation à venir
+                    Aucune Séance pour Aujourd'hui
                 </div>
 
             @endforelse

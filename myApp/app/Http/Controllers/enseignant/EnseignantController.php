@@ -96,7 +96,9 @@ class EnseignantController extends Controller
 
         $reservationsRecentes = Seance::with('salle')
             ->where('enseignantId', Auth::user()->enseignant->id)
-            ->orderByRaw("DAYOFWEEK(date)")
+            ->whereDate('date', Carbon::today())
+            ->where('heure_deb', '>=', Carbon::now()->format('H:i:s'))
+            ->orderBy('heure_deb')
             ->get();
 
         $mesReservationsCount = Seance::where('enseignantId', Auth::user()->enseignant->id)->count();

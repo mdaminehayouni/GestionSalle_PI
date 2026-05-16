@@ -123,7 +123,7 @@
             <p>Matière</p>
             <input type="text" name="matiere" id="matiere" placeholder="Matiere"
                 class="w-full mb-3 border rounded-lg px-3 py-2" required>
-
+            <p id="jourAffiche" class="text-l text-gray-600"></p>
             <p>Date</p>
             <input type="date" name="date" id="date"
                 class="w-full mb-3 border rounded-lg px-3 py-2"
@@ -359,7 +359,18 @@ fetch(`/classes-disponibles?date=${date}&heure_deb=${debut}&heure_fin=${fin}&sea
             }
         });
 }
+document.getElementById('date').addEventListener('change', function () {
+    let date = this.value;
 
+    if (!date) return;
+
+    let [y, m, d] = date.split('-');
+
+    let jour = new Date(y, m - 1, d)
+        .toLocaleDateString('fr-FR', { weekday: 'long' });
+
+    document.getElementById('jourAffiche').textContent = "Jour : " + jour;
+});
 // split horaire avant la soumission
 document.getElementById('seanceForm').addEventListener('submit', function(e) {
     let horaire = document.getElementById('horaire').value;

@@ -18,7 +18,7 @@ class ClasseController extends Controller
     {
         $request->validate([
             'libelle' => 'required|string|max:50',
-            'niveau' => 'required|integer',
+            'niveau' => 'required|string',
         ]);
 
         Classe::create($request->all());
@@ -31,7 +31,7 @@ class ClasseController extends Controller
 
         $request->validate([
             'libelle' => 'required|string|max:50',
-            'niveau' => 'required|integer',
+            'niveau' => 'required|string',
         ]);
 
         $classe->update($request->all());

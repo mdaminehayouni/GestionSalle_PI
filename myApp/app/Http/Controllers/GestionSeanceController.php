@@ -37,7 +37,7 @@ class GestionSeanceController extends Controller
         $seanceId = $request->seance_id;
 
         $salles = Salle::whereDoesntHave('seances', function ($q) use ($date, $debut, $fin, $seanceId) {
-            $q->where('date', $date)
+            $q->whereRaw('DAYOFWEEK(date) = DAYOFWEEK(?)', [$date])
             ->where(function ($x) use ($debut, $fin) {
                 $x->whereBetween('heure_deb', [$debut, $fin])
                     ->orWhereBetween('heure_fin', [$debut, $fin])
@@ -61,7 +61,7 @@ class GestionSeanceController extends Controller
         $seanceId = $request->seance_id;
 
         $enseignants = Enseignant::whereDoesntHave('seances', function ($q) use ($date, $debut, $fin, $seanceId) {
-            $q->where('date', $date)
+            $q->whereRaw('DAYOFWEEK(date) = DAYOFWEEK(?)', [$date])
             ->where(function ($x) use ($debut, $fin) {
                 $x->whereBetween('heure_deb', [$debut, $fin])
                     ->orWhereBetween('heure_fin', [$debut, $fin])
@@ -86,7 +86,7 @@ class GestionSeanceController extends Controller
 
         $classes = Classe::whereDoesntHave('seances', function ($q) use ($date, $debut, $fin, $seanceId) {
 
-            $q->where('date', $date)
+            $q->whereRaw('DAYOFWEEK(date) = DAYOFWEEK(?)', [$date])
             ->where(function ($x) use ($debut, $fin) {
 
                 $x->whereBetween('heure_deb', [$debut, $fin])

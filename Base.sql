@@ -28,14 +28,16 @@ CREATE TABLE IF NOT EXISTS `cache` (
   KEY `cache_expiration_index` (`expiration`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Listage des données de la table gestionsalles.cache : ~6 rows (environ)
+-- Listage des données de la table gestionsalles.cache : ~8 rows (environ)
 INSERT INTO `cache` (`key`, `value`, `expiration`) VALUES
 	('laravel-cache-aammiinneehayouni@gmail.com|127.0.0.1', 'i:2;', 1777242676),
 	('laravel-cache-aammiinneehayouni@gmail.com|127.0.0.1:timer', 'i:1777242676;', 1777242676),
 	('laravel-cache-mdamine.hayouni1@gmail.com|127.0.0.1', 'i:1;', 1777576141),
 	('laravel-cache-mdamine.hayouni1@gmail.com|127.0.0.1:timer', 'i:1777576141;', 1777576141),
 	('laravel-cache-mdamine.hni@gmail.com|127.0.0.1', 'i:1;', 1777242658),
-	('laravel-cache-mdamine.hni@gmail.com|127.0.0.1:timer', 'i:1777242658;', 1777242658);
+	('laravel-cache-mdamine.hni@gmail.com|127.0.0.1:timer', 'i:1777242658;', 1777242658),
+	('laravel-cache-nzghonda@gmail.com|127.0.0.1', 'i:2;', 1778709162),
+	('laravel-cache-nzghonda@gmail.com|127.0.0.1:timer', 'i:1778709162;', 1778709162);
 
 -- Listage de la structure de table gestionsalles. cache_locks
 CREATE TABLE IF NOT EXISTS `cache_locks` (
@@ -54,13 +56,15 @@ CREATE TABLE IF NOT EXISTS `classe` (
   `libelle` varchar(50) DEFAULT NULL,
   `niveau` int DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Listage des données de la table gestionsalles.classe : ~5 rows (environ)
+-- Listage des données de la table gestionsalles.classe : ~3 rows (environ)
 INSERT INTO `classe` (`id`, `libelle`, `niveau`) VALUES
 	(1, 'L2DSI2', 2),
 	(6, 'L2DSI1', 2),
-	(7, 'L2DSI3', 2);
+	(7, 'L2DSI3', 2),
+	(8, 'l1-Ti5', 1),
+	(9, 'L3DSI1', 3);
 
 -- Listage de la structure de table gestionsalles. enseignants
 CREATE TABLE IF NOT EXISTS `enseignants` (
@@ -71,7 +75,7 @@ CREATE TABLE IF NOT EXISTS `enseignants` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `user_id` (`user_id`),
   CONSTRAINT `enseignants_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Listage des données de la table gestionsalles.enseignants : ~5 rows (environ)
 INSERT INTO `enseignants` (`id`, `user_id`, `nom`, `prenom`) VALUES
@@ -79,7 +83,11 @@ INSERT INTO `enseignants` (`id`, `user_id`, `nom`, `prenom`) VALUES
 	(4, 16, 'hayouni', 'med'),
 	(5, 17, 'mokrani', 'salim'),
 	(6, 18, 'lamouchi', 'Macha'),
-	(7, 19, 'Aidoudi', 'Amine');
+	(7, 19, 'Aidoudi', 'Amine'),
+	(8, 27, 'hayouni', 'sa'),
+	(9, 28, 'Loti', 'nounounita'),
+	(10, 29, 'KHECHINI', 'Yosr'),
+	(11, 31, 'Agrebi', 'Nour');
 
 -- Listage de la structure de table gestionsalles. etudiant
 CREATE TABLE IF NOT EXISTS `etudiant` (
@@ -93,11 +101,13 @@ CREATE TABLE IF NOT EXISTS `etudiant` (
   KEY `FK_classe` (`classe_id`) USING BTREE,
   CONSTRAINT `FK_classe` FOREIGN KEY (`classe_id`) REFERENCES `classe` (`id`),
   CONSTRAINT `FK_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Listage des données de la table gestionsalles.etudiant : ~0 rows (environ)
 INSERT INTO `etudiant` (`nom`, `prenom`, `classe_id`, `user_id`, `id`) VALUES
-	('omar', 'Mekki', 1, 25, 1);
+	('omar', 'Mekki', 1, 25, 1),
+	('hayouni', 'med', 1, 26, 2),
+	('nour', 'agrebi', 1, 30, 3);
 
 -- Listage de la structure de table gestionsalles. failed_jobs
 CREATE TABLE IF NOT EXISTS `failed_jobs` (
@@ -146,13 +156,32 @@ CREATE TABLE IF NOT EXISTS `job_batches` (
 
 -- Listage des données de la table gestionsalles.job_batches : ~0 rows (environ)
 
+-- Listage de la structure de table gestionsalles. message
+CREATE TABLE IF NOT EXISTS `message` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `Message` text NOT NULL,
+  `enseignantId` int NOT NULL,
+  `classeId` int NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_message_enseignant` (`enseignantId`),
+  KEY `fk_message_classe` (`classeId`),
+  CONSTRAINT `fk_message_classe` FOREIGN KEY (`classeId`) REFERENCES `classe` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_message_enseignant` FOREIGN KEY (`enseignantId`) REFERENCES `enseignants` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Listage des données de la table gestionsalles.message : ~0 rows (environ)
+INSERT INTO `message` (`id`, `Message`, `enseignantId`, `classeId`, `created_at`, `updated_at`) VALUES
+	(1, 'Je serai absente le lundi', 10, 1, '2026-05-15 23:19:16', '2026-05-15 23:19:16');
+
 -- Listage de la structure de table gestionsalles. migrations
 CREATE TABLE IF NOT EXISTS `migrations` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
   `migration` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `batch` int NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Listage des données de la table gestionsalles.migrations : ~4 rows (environ)
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
@@ -160,7 +189,8 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 	(2, '0001_01_01_000001_create_cache_table', 1),
 	(3, '0001_01_01_000002_create_jobs_table', 1),
 	(4, '2026_04_26_122914_create_etudiants_table', 2),
-	(5, '2026_04_26_164147_add_role_to_users_table', 3);
+	(5, '2026_04_26_164147_add_role_to_users_table', 3),
+	(6, '2026_05_15_231259_add_timestamps_to_message_table', 4);
 
 -- Listage de la structure de table gestionsalles. password_reset_tokens
 CREATE TABLE IF NOT EXISTS `password_reset_tokens` (
@@ -170,9 +200,9 @@ CREATE TABLE IF NOT EXISTS `password_reset_tokens` (
   PRIMARY KEY (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Listage des données de la table gestionsalles.password_reset_tokens : ~0 rows (environ)
+-- Listage des données de la table gestionsalles.password_reset_tokens : ~1 rows (environ)
 INSERT INTO `password_reset_tokens` (`email`, `token`, `created_at`) VALUES
-	('mdamine.hayouni@gmail.com', '$2y$12$ueJRkDT65wUsyygKF5qmMO3PZC655fwhiqAu7S6IdzLsX.VlX9QrS', '2026-04-28 18:48:32');
+	('mdamine.hayouni@gmail.com', '$2y$12$WsCOZVqq9EzzsPwnU0RF2u84D7klJVUWnnQIM0unJJpXba5eeLnYu', '2026-05-14 14:20:44');
 
 -- Listage de la structure de table gestionsalles. reclamations
 CREATE TABLE IF NOT EXISTS `reclamations` (
@@ -183,17 +213,18 @@ CREATE TABLE IF NOT EXISTS `reclamations` (
   `statut` varchar(20) DEFAULT 'en_attente',
   `user_id` bigint unsigned DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `salleId` int DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
-  CONSTRAINT `reclamations_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  KEY `salle` (`salleId`),
+  CONSTRAINT `reclamations_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
+  CONSTRAINT `salle` FOREIGN KEY (`salleId`) REFERENCES `salle` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Listage des données de la table gestionsalles.reclamations : ~4 rows (environ)
-INSERT INTO `reclamations` (`id`, `titre`, `description`, `type`, `statut`, `user_id`, `created_at`) VALUES
-	(6, 'Projecteur en panne - Salle A12', 'Le projecteur ne fonctionne pas depuis ce matin, impossible d’assurer le cours.', 'materiel', 'traite', 19, '2026-05-02 23:53:04'),
-	(7, 'Climatisation HS - Salle B05', 'La clim ne marche pas, la salle est très chaude pendant les cours.', 'materiel', 'archive', 15, '2026-05-02 23:53:04'),
-	(8, 'Problème de Salle', 'Le tableau est cassé dans la salle I10.', 'organisation', 'archive', 16, '2026-05-02 23:53:04'),
-	(10, 'Problème de Salle', 'La salle I12 est bloqué elle ne s\'ouvre pas.', 'planning', 'archive', 18, '2026-05-02 23:53:04');
+-- Listage des données de la table gestionsalles.reclamations : ~2 rows (environ)
+INSERT INTO `reclamations` (`id`, `titre`, `description`, `type`, `statut`, `user_id`, `created_at`, `salleId`) VALUES
+	(12, 'Projecteur en Panne', 'Merci de remplacer le projecteur!', 'materiel', 'en_attente', 29, '2026-05-13 23:45:54', 2),
+	(13, 'salle endommagé', 'sdfghjklmlkjhgfds', 'conflit', 'en_attente', 29, '2026-05-14 14:19:33', 3);
 
 -- Listage de la structure de table gestionsalles. salle
 CREATE TABLE IF NOT EXISTS `salle` (
@@ -203,14 +234,16 @@ CREATE TABLE IF NOT EXISTS `salle` (
   `type` enum('AMPHI','TP','NORMAL') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `disponibilite` tinyint DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Listage des données de la table gestionsalles.salle : ~4 rows (environ)
 INSERT INTO `salle` (`id`, `nomSalle`, `capacite`, `type`, `disponibilite`) VALUES
 	(1, 'I10', 50, 'AMPHI', 1),
 	(2, 'I12', 200, 'NORMAL', 1),
 	(3, 'I6', 20, 'TP', 1),
-	(9, 'I8', 50, 'NORMAL', 0);
+	(9, 'I8', 50, 'NORMAL', 0),
+	(10, 'I5', 30, 'NORMAL', 0),
+	(11, 'ABS1', 40, 'TP', 1);
 
 -- Listage de la structure de table gestionsalles. seance
 CREATE TABLE IF NOT EXISTS `seance` (
@@ -228,12 +261,27 @@ CREATE TABLE IF NOT EXISTS `seance` (
   KEY `FK_seanceClasse` (`classeId`),
   CONSTRAINT `FK_seanceClasse` FOREIGN KEY (`classeId`) REFERENCES `classe` (`id`),
   CONSTRAINT `FK_seanceSalle` FOREIGN KEY (`salleId`) REFERENCES `salle` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=55 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Listage des données de la table gestionsalles.seance : ~2 rows (environ)
+-- Listage des données de la table gestionsalles.seance : ~16 rows (environ)
 INSERT INTO `seance` (`id`, `matiere`, `date`, `heure_deb`, `heure_fin`, `enseignantId`, `classeId`, `salleId`) VALUES
 	(20, 'math', '2026-05-04', '10:15:00', '11:45:00', 4, 1, 1),
-	(21, 'SID', '2026-05-05', '08:30:00', '10:00:00', 5, 1, 2);
+	(21, 'SID', '2026-05-05', '08:30:00', '10:00:00', 3, 1, 2),
+	(23, 'sid', '2026-05-05', '10:15:00', '11:45:00', 4, 6, 1),
+	(24, 'loti', '2026-05-12', '13:30:00', '15:00:00', 9, 1, 10),
+	(25, 'Yosr teaching', '2026-05-08', '08:30:00', '10:00:00', 10, 1, 9),
+	(26, 'aaaa', '2026-05-11', '08:30:00', '10:00:00', 4, 1, 2),
+	(28, 'cccccc', '2026-05-11', '10:15:00', '11:45:00', 5, 1, 2),
+	(29, 'dddddddd', '2026-05-13', '08:30:00', '10:00:00', 4, 1, 1),
+	(30, 'eeeee', '2026-05-13', '08:30:00', '10:00:00', 3, 7, 3),
+	(37, 'Arabe', '2026-05-16', '17:00:00', '18:30:00', 11, 1, 11),
+	(46, 'English', '2026-05-16', '08:30:00', '10:00:00', 10, 1, 1),
+	(47, 'Math', '2026-05-11', '08:30:00', '10:00:00', 10, 6, 1),
+	(50, 'JEE', '2026-05-15', '12:00:00', '13:30:00', 5, 1, 11),
+	(51, 'Pyhton', '2026-05-15', '08:30:00', '10:00:00', 7, 1, 11),
+	(52, 'a', '2026-05-14', '08:30:00', '10:00:00', 10, 1, 2),
+	(53, 'b', '2026-05-11', '10:15:00', '11:45:00', 10, 6, 10),
+	(54, 'JEE', '2026-05-16', '17:00:00', '18:30:00', 10, 7, 1);
 
 -- Listage de la structure de table gestionsalles. sessions
 CREATE TABLE IF NOT EXISTS `sessions` (
@@ -250,7 +298,7 @@ CREATE TABLE IF NOT EXISTS `sessions` (
 
 -- Listage des données de la table gestionsalles.sessions : ~1 rows (environ)
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-	('cOO5Vu4YcWLsmCrLLbzF1WOGd0VTXygNUQGy5oDE', 25, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36 Edg/147.0.0.0', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiNmtYVjdEelJ3MEZQcVBaVEQ4Ynp3NmdManJ5MWxrN01zS2RTMVJjaCI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6NDA6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9ldHVkaWFudC9kYXNoYm9hcmQiO3M6NToicm91dGUiO3M6MTg6ImV0dWRpYW50LmRhc2hib2FyZCI7fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjI1O30=', 1777881416);
+	('bLWoqRO71uTSLDoj8VS2aJMcAku2jXUIxECqyiNe', 29, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36 Edg/148.0.0.0', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiVTBGZm1GMFZKZlZUNXBGVlFZN1NQOTFoWkZsMnlodVhncVlzeFVwNiI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6Njk6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9lbnNlaWduYW50L2NyZW5lYXV4LWRpc3BvbmlibGVzP2RhdGU9MjAyNi0wNS0wOSI7czo1OiJyb3V0ZSI7Tjt9czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6Mjk7fQ==', 1778934798);
 
 -- Listage de la structure de table gestionsalles. users
 CREATE TABLE IF NOT EXISTS `users` (
@@ -265,9 +313,9 @@ CREATE TABLE IF NOT EXISTS `users` (
   `role` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'etudiant',
   PRIMARY KEY (`id`),
   UNIQUE KEY `users_email_unique` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Listage des données de la table gestionsalles.users : ~7 rows (environ)
+-- Listage des données de la table gestionsalles.users : ~9 rows (environ)
 INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `remember_token`, `created_at`, `updated_at`, `role`) VALUES
 	(1, 'Mohamed Amine Hayouni', 'mdamine.hayouni@gmail.com', NULL, '$2y$12$TbLTzw8Os5PBTm7qEiLcMeWkbPB8eUIm/FqrhDEaL7cGFR7xeDsx.', NULL, '2026-04-26 20:34:48', '2026-04-26 20:34:48', 'chef'),
 	(15, 'Ksouri', 'KsouriLeParfait@gmail', NULL, '$2y$12$QvUXKdjMmPTTjQaVoMF0MeNskFxqX1mLRIE/K3Huh3ZKhBk927D.K', NULL, '2026-05-02 16:38:03', '2026-05-02 16:38:03', 'enseignant'),
@@ -275,7 +323,13 @@ INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `re
 	(17, 'mokrani', 'salim@gmail.com', NULL, '$2y$12$R1EKzrVAY4HyLpfaDk/yZO9gFfy7HsUevnBQ7EqmBumy74NaNpXFi', NULL, '2026-05-02 16:39:16', '2026-05-02 16:39:16', 'enseignant'),
 	(18, 'lamouchi Macha', 'lamouchi@gmail.com', NULL, '$2y$12$agG3ojTcapaeG3dZ5p2JBuTKl9CZJ9i8/r35oI8LTc9gN5osJ8NKq', NULL, '2026-05-02 16:39:45', '2026-05-02 21:11:36', 'enseignant'),
 	(19, 'Aidoudi', 'aidoudi@gmail.com', NULL, '$2y$12$s4NYdCkvl1pQePcftATKkuHctEYniIPVRjzpcoy47q5lx/hBgM8ne', NULL, '2026-05-02 16:40:16', '2026-05-02 16:40:16', 'enseignant'),
-	(25, 'omar', 'omar@gmail.com', NULL, '$2y$12$tpwq5ymGfBAh.UmZAAPR6OHYt9twfhZt4JeprvQEDo37.Dl71rwni', NULL, '2026-05-03 22:35:43', '2026-05-03 22:35:43', 'etudiant');
+	(25, 'omar', 'omar@gmail.com', NULL, '$2y$12$tpwq5ymGfBAh.UmZAAPR6OHYt9twfhZt4JeprvQEDo37.Dl71rwni', NULL, '2026-05-03 22:35:43', '2026-05-03 22:35:43', 'etudiant'),
+	(26, 'hayouni', 'mdamine.hayouni1@gmail.com', NULL, '$2y$12$M8fW6hL0wKubO7FKFzkNdO4EdQMrl0F3fjtA3iCZf/BZS1JJ4esmW', NULL, '2026-05-04 09:07:15', '2026-05-04 09:07:15', 'etudiant'),
+	(27, 'hayouni', 'aidoudi11@gmail.com', NULL, '$2y$12$HoyVdT9LOVCTNHWOhfZcpu.xYeCXvp.n29DlmjoRil8CRg.N8BRky', NULL, '2026-05-04 09:12:23', '2026-05-04 09:12:23', 'enseignant'),
+	(28, 'Loti', 'nzghonda@gmail.com', NULL, '$2y$12$oUZGk5PO9GuztU/9I96JLO7TYAXdYd4Az3YHGqB3fnr/crLTkl.CO', NULL, '2026-05-05 08:06:52', '2026-05-05 08:06:52', 'enseignant'),
+	(29, 'KHECHINI', 'yosr@gmail.com', NULL, '$2y$12$TV4LuXVjdelKUyuD7PM9dexBTTQvsthvCZlD7oilTTuW.QijYQeRS', NULL, '2026-05-05 15:23:34', '2026-05-05 15:23:34', 'enseignant'),
+	(30, 'nour', 'nour@gmail.com', NULL, '$2y$12$R.qipBZ9v4SEM5/8EYFNG.0k6U/cScu.lN.CZDzJjVzR.vGec8Pzy', NULL, '2026-05-14 14:05:18', '2026-05-14 14:05:18', 'etudiant'),
+	(31, 'Agrebi', 'nour1@gmail.com', NULL, '$2y$12$3EZ8cA9BvQSILwtk662fy.uubIxIPSADA0swanX.d8Sz302wMbTMu', NULL, '2026-05-14 14:08:46', '2026-05-14 14:08:46', 'enseignant');
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
