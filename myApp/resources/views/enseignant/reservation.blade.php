@@ -4,7 +4,7 @@
 
 <div class="flex justify-between mb-6">
     <div>
-        <h2 class="text-2xl font-bold">Mes réservations</h2>
+        <h2 class="text-2xl font-bold">Mes Séances</h2>
         <p class="text-gray-500 text-sm">Gestion des salles</p>
     </div>
 
@@ -22,7 +22,7 @@
 <tr>
     <th class="p-4 text-left">Salle</th>
     <th class="p-4 text-left">Matière</th>
-    <th class="p-4 text-left">Date</th>
+    <th class="p-4 text-left">Jour</th>
     <th class="p-4 text-left">Horaire</th>
     <th class="p-4 text-left w-32">Action</th>
 </tr>
@@ -41,7 +41,7 @@
     </td>
 
     <td class="p-4 align-middle">
-        {{ $r['date'] }}
+        {{ \Carbon\Carbon::parse($r['date'])->locale('fr')->dayName }}
     </td>
 
     <td class="p-4 align-middle">

@@ -14,10 +14,22 @@ class Message extends Model
         'classeId',
     ];
 
-    public $timestamps = false;
+    // IMPORTANT: activer created_at / updated_at
+    public $timestamps = true;
+
+    /*
+    |--------------------------------------------------------------------------
+    | Relations
+    |--------------------------------------------------------------------------
+    */
 
     public function classe()
     {
-        return $this->belongsTo(Classe::class, 'classeId');
+        return $this->belongsTo(Classe::class, 'classeId', 'id');
+    }
+
+    public function enseignant()
+    {
+        return $this->belongsTo(Enseignant::class, 'enseignantId');
     }
 }

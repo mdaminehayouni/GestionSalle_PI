@@ -84,17 +84,35 @@
             <input type="hidden" name="id" id="enseignant_id">
             <p>Nom</p>
             <input type="text" name="nom" id="nom"
+                value="{{ old('nom') }}"
                 class="w-full mb-3 border rounded-lg px-3 py-2" placeholder ='Hayouni' required>
+            @error('nom')
+                <p class="text-red-500 text-xs mb-2">
+                    {{ $message }}
+                </p>
+            @enderror
             <p>Prenom</p>
             <input type="text" name="prenom" id="prenom"
+                value="{{ old('prenom') }}"
                 class="w-full mb-3 border rounded-lg px-3 py-2" placeholder ='Amine' required>
             <p>Email</p>
             <input type="email" name="email" id="email"
+                value="{{ old('email') }}"
                 class="w-full mb-3 border rounded-lg px-3 py-2" placeholder ='mdamine.hayouni@gmail.com' required>
+            @error('email')
+                <p class="text-red-500 text-xs mb-2">
+                    {{ $message }}
+                </p>
+            @enderror
             <p id="password_text">MotPasse</p>
             <input type="password" name="password" id="password" placeholder ='••••••••'
+                value="{{ old('password') }}"
                 class="w-full mb-3 border rounded-lg px-3 py-2">
-
+            @error('password')
+                <p class="text-red-500 text-xs mb-2">
+                    {{ $message }}
+                </p>
+            @enderror
             <div class="flex justify-end gap-2">
                 <button type="button" onclick="closeModal()"
                     class="px-4 py-2 bg-gray-200 rounded-lg">
@@ -109,6 +127,14 @@
         </form>
     </div>
 </div>
+@if($errors->any())
+<script>
+    window.onload = function () {
+        document.getElementById('modal').classList.remove('hidden');
+        document.getElementById('modal').classList.add('flex');
+    }
+</script>
+@endif
 <script>
 function openModal() {
     document.getElementById('enseignantForm').action = "{{ route('chef.enseignant.store') }}";

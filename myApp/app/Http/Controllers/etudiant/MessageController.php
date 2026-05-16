@@ -2,28 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Models\Message;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class messageController extends Controller
+class MessageController extends Controller
 {
-    use App\Models\Message;
-use Illuminate\Support\Facades\Auth;
+    public function messages()
+    {
+        $user = Auth::user();
 
-public function messages()
-{
-    // récupérer la classe de l'étudiant connecté
-    $etudiant = Auth::user();
+        // si relation user -> etudiant
+        $etudiant = $user->etudiant;
 
-    $classeId = $etudiant->classeId; // adapte selon ton schéma
+        $classeId = $etudiant->classe_id ?? null;
 
-    $messages = Message::with('classe')
-        ->where('classeId', $classeId)
-        ->orderBy('id', 'desc')
-        ->get();
-
-    return view('etudiant.messages', compact('messages'));
-}
+        $messages = Message::with(['classe', 'enseignant'])
+            ->where('classeId', $classeId)
+            ->orderByDesc('created_at')
+            ->get();
+        return view('etudiant.messages', compact('messages'));
+    }
 }

@@ -50,9 +50,8 @@
                                 <p class="text-xs text-blue-600">
                                     {{ $event['salle'] }}
                                 </p>
-
-                                <p class="text-xs text-blue-500">
-                                    {{ $slot['label'] }}
+                                <p class="text-xs text-blue-600">
+                                    {{ $event['classe'] }}
                                 </p>
 
                             </div>

@@ -7,27 +7,7 @@
 @section('content')
 
 {{-- STATS GRID --}}
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mb-7">
-
-    {{-- CARD 1 --}}
-    <div class="bg-white rounded-2xl shadow p-6 flex flex-col gap-3 hover:shadow-lg transition">
-        <div class="flex items-center justify-between">
-            <div class="w-11 h-11 rounded-xl bg-green-100 text-green-600 flex items-center justify-center">
-                <i class="fa-solid fa-circle-check"></i>
-            </div>
-            <span class="text-xs font-semibold px-3 py-1 rounded-full bg-green-100 text-green-600">
-                Maintenant
-            </span>
-        </div>
-
-        <div class="text-3xl font-bold">
-            {{ $sallesDisponibles ?? 24 }}
-        </div>
-        <div class="text-sm text-gray-500">
-            Salles disponibles
-        </div>
-    </div>
-
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mb-7">
     {{-- CARD 2 --}}
     <div class="bg-white rounded-2xl shadow p-6 flex flex-col gap-3 hover:shadow-lg transition">
         <div class="flex items-center justify-between">
@@ -40,7 +20,7 @@
             {{ $mesReservations ?? 8 }}
         </div>
         <div class="text-sm text-gray-500">
-            Mes réservations
+            Mes Séances
         </div>
     </div>
 
@@ -93,7 +73,7 @@
         <div class="flex items-center justify-between mb-5">
             <h2 class="text-lg font-bold flex items-center gap-2">
                 <span class="material-symbols-outlined">calendar_month</span>
-                Mes réservations
+                Mes Séance
             </h2>
 
             <a href="{{ route('enseignant.reservations') }}"
@@ -118,17 +98,13 @@
                         </div>
 
                         <div class="text-xs text-gray-500">
-                            {{ $r->date }} | {{ substr($r->heure_deb, 0, 5) }} - {{ substr($r->heure_fin, 0, 5) }}
+                            {{ \Carbon\Carbon::parse($r->date)->locale('fr')->dayName }} | {{ substr($r->heure_deb, 0, 5) }} - {{ substr($r->heure_fin, 0, 5) }}
                         </div>
 
                         <div class="text-xs text-gray-400">
                             {{ $r->matiere }}
                         </div>
                     </div>
-
-                    <span class="text-xs px-3 py-1 rounded-full bg-blue-100 text-blue-600 font-semibold">
-                        Réservée
-                    </span>
 
                 </div>
 

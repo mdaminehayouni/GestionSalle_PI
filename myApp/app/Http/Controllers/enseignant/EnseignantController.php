@@ -92,21 +92,20 @@ class EnseignantController extends Controller
 
     public function dashboard()
     {
-            $sallesDisponibles = Salle::count();
+        $sallesDisponibles = Salle::count();
 
         $reservationsRecentes = Seance::with('salle')
-            ->where('enseignantId', Auth::id())
-            ->orderBy('date', 'desc')
-            ->take(5)
+            ->where('enseignantId', Auth::user()->enseignant->id)
+            ->orderByRaw("DAYOFWEEK(date)")
             ->get();
 
-        $mesReservationsCount = Seance::where('enseignantId', Auth::id())->count();
-
+        $mesReservationsCount = Seance::where('enseignantId', Auth::user()->enseignant->id)->count();
+        $mesReclamationsCount = Reclamation::where('user_id', Auth::id())->count();
         return view('enseignant.dashboard', [
             'sallesDisponibles' => $sallesDisponibles,
             'mesReservations' => $mesReservationsCount,
-            'demandesEnCours' => 0,
-            'reclamationsEnvoyees' => 0,
+            'demandesEnCours' => $mesReclamationsCount,
+            'reclamationsEnvoyees' => $mesReclamationsCount,
             'reservationsRecentes' => $reservationsRecentes,
         ]);
     }
@@ -118,7 +117,7 @@ class EnseignantController extends Controller
     */
     private function getCreneauFromHeure($heure)
     {
-        $h = substr($heure, 0, 5);
+        $h = date('H:i', strtotime($heure));
 
         $creneaux = [
             '08:30' => '08:30 - 10:00',
@@ -154,11 +153,11 @@ class EnseignantController extends Controller
 
         $emploi = [];
 
-        $seances = Seance::with('salle')
-            ->where('enseignantId', auth()->id())
-            ->orderBy('date')
-            ->orderBy('heure_deb')
-            ->get();
+        $seances = Seance::with(['salle', 'classe'])
+        ->where('enseignantId', Auth::user()->enseignant->id)
+        ->orderBy('date')
+        ->orderBy('heure_deb')
+        ->get();
 
         $emploi = [];
 
@@ -177,6 +176,7 @@ class EnseignantController extends Controller
             $emploi[$slot][$jour][] = [
                 'matiere' => $s->matiere,
                 'salle' => $s->salle->nomSalle ?? '',
+                'classe' => $s->classe->libelle ?? '',
                 'color' => 'bg-blue-600'
             ];
         }
@@ -215,7 +215,7 @@ class EnseignantController extends Controller
 
         Message::create([
             'Message' => $request->contenu,
-            'enseignantId' => Auth::id(),
+            'enseignantId' => Auth::user()->enseignant->id,
             'classeId' => $request->classe_id,
         ]);
 
@@ -298,9 +298,11 @@ class EnseignantController extends Controller
             ['15:15','16:45'],
             ['17:00','18:30'],
         ];
+    
+        $dayOfWeek = Carbon::parse($date)->dayOfWeek + 1; // DAYOFWEEK: 1=dimanche, 2=lundi, etc.
 
-        $busy = Seance::where('enseignantId', Auth::id())
-            ->where('date', $date)
+        $busy = Seance::where('enseignantId', Auth::user()->enseignant->id)
+            ->whereRaw("DAYOFWEEK(date) = ?", [$dayOfWeek])
             ->get();
 
         $available = array_filter($allCreneaux, function ($c) use ($busy) {
@@ -326,14 +328,21 @@ class EnseignantController extends Controller
 
         $classes = Classe::whereDoesntHave('seances', function ($q) use ($date, $debut, $fin) {
 
-            $q->where('date', $date)
+            $q->whereRaw(
+                "DAYOFWEEK(date) = DAYOFWEEK(?)",
+                [$date]
+            )
             ->where(function ($x) use ($debut, $fin) {
+
                 $x->whereBetween('heure_deb', [$debut, $fin])
-                    ->orWhereBetween('heure_fin', [$debut, $fin])
-                    ->orWhere(function ($y) use ($debut, $fin) {
-                        $y->where('heure_deb', '<=', $debut)
+                ->orWhereBetween('heure_fin', [$debut, $fin])
+                ->orWhere(function ($y) use ($debut, $fin) {
+
+                    $y->where('heure_deb', '<=', $debut)
                         ->where('heure_fin', '>=', $fin);
-                    });
+
+                });
+
             });
 
         })->get();
@@ -348,7 +357,10 @@ class EnseignantController extends Controller
 
         $salles = Salle::whereDoesntHave('seances', function ($q) use ($date, $debut, $fin) {
 
-            $q->where('date', $date)
+            $q->whereRaw(
+                "DAYOFWEEK(date) = DAYOFWEEK(?)",
+                [$date]
+            )
             ->where(function ($x) use ($debut, $fin) {
                 $x->whereBetween('heure_deb', [$debut, $fin])
                     ->orWhereBetween('heure_fin', [$debut, $fin])
@@ -367,8 +379,8 @@ class EnseignantController extends Controller
         $classes = Classe::all();
 
         $reservations = Seance::with('salle')
-            ->where('enseignantId', Auth::id())
-            ->orderBy('date', 'desc')
+            ->where('enseignantId', Auth::user()->enseignant->id)
+            ->orderByRaw("DAYOFWEEK(date)")
             ->get()
             ->map(function ($s) {
                 return [
@@ -398,13 +410,16 @@ class EnseignantController extends Controller
                 'classe_id' => 'required',
                 'salle_id' => 'required',
             ]);
-            $conflict = Seance::where('date', $request->date)
+            $conflict = Seance::whereRaw(
+                "DAYOFWEEK(date) = DAYOFWEEK(?)",
+                [$request->date]
+            )
             ->where(function ($q) use ($request) {
 
                 $q->where(function ($x) use ($request) {
                     $x->where('salleId', $request->salle_id)
                     ->orWhere('classeId', $request->classe_id)
-                    ->orWhere('enseignantId', Auth::id());
+                    ->orWhere('enseignantId', Auth::user()->enseignant->id);
                 });
 
             })
@@ -425,7 +440,7 @@ class EnseignantController extends Controller
                 'date' => $request->date,
                 'heure_deb' => $request->heure_deb,
                 'heure_fin' => $request->heure_fin,
-                'enseignantId' => Auth::id(),
+                'enseignantId' => Auth::user()->enseignant->id,
                 'classeId' => $request->classe_id,
                 'salleId' => $request->salle_id,
             ]);
@@ -434,7 +449,7 @@ class EnseignantController extends Controller
         }
     public function destroyReservation($id)
     {
-        $seance = Seance::where('enseignantId', Auth::id())
+        $seance = Seance::where('enseignantId', Auth::user()->enseignant->id)
             ->findOrFail($id);
 
         $seance->delete();

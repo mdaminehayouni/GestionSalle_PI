@@ -1,5 +1,5 @@
 <aside class="w-64 min-h-screen flex-shrink-0 bg-gradient-to-b from-emerald-800 to-emerald-900 text-white flex flex-col justify-between">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=calendar_today" />    
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />    
 <style>
 .material-symbols-outlined {
   font-variation-settings:
@@ -52,7 +52,10 @@
 
             <a href="{{ route('etudiant.messages') }}"
                class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm sidebar-item">
-                Messages
+               <span class="material-symbols-outlined">
+                notifications
+                </span> 
+               Notification
             </a>
 
         </nav>

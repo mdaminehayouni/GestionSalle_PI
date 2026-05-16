@@ -32,11 +32,21 @@ class GestionEnseignantController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'nom'=>'required',
-            'email'=>'required|email|unique:users',
-            'password'=>'required|min:8',
-        ]);
+        $request->validate(
+            [
+                'nom' => 'required',
+                'email' => 'required|email|unique:users,email',
+                'password' => 'required|min:8',
+            ],
+            [
+                'nom.required' => 'Le nom est obligatoire.',
+                'email.required' => 'L’email est obligatoire.',
+                'email.email' => 'Format email invalide.',
+                'email.unique' => 'Cet email est déjà utilisé.',
+                'password.required' => 'Le mot de passe est obligatoire.',
+                'password.min' => 'Le mot de passe doit contenir au moins 8 caractères.',
+            ]
+        );
         $user=User::create([
             'name' => $request->nom, // or name
             'email' => $request->email,
