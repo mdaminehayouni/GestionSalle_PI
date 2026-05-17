@@ -44,27 +44,38 @@ Pour faire tourner l'application en local, suivez les étapes suivantes :
 Accédez au dossier de l'application :
 ```bash
 cd myApp
+```
 Installez les dépendances PHP et JavaScript :
 
-Bash
+```Bash
 composer install
 npm install && npm run dev
+```
 Créez votre fichier de configuration d'environnement :
 
-Bash
+```Bash
 cp .env.example .env
+```
 Ouvrez le fichier .env et configurez les accès à votre base de données (DB_DATABASE=gestion_salles, DB_USERNAME, DB_PASSWORD).
 
 Générez la clé d'application :
 
-Bash
+```Bash
 php artisan key:generate
+```
 4. Exécution
-Lancez le serveur de développement local :
+Lancez le serveur de développement local dans powershell:
 
-Bash
+```Bash
 php artisan serve
+```
+ensuite ouvrir command prompt Lancer:
+```Bash
+npm run dev
+````
+
 L'application sera accessible à l'adresse : http://127.0.0.1:8000
+
 
 
 ---
