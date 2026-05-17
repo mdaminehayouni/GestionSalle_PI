@@ -27,7 +27,7 @@
             <thead class="bg-gray-50 text-gray-500 uppercase text-xs">
                 <tr>
                     <th class="px-6 py-4 text-left">Matière</th>
-                    <th class="px-6 py-4 text-left">Date</th>
+                    <th class="px-6 py-4 text-left">Jour</th>
                     <th class="px-6 py-4 text-left">Horaire</th>
                     <th class="px-6 py-4 text-left">Enseignant(e)</th>
                     <th class="px-6 py-4 text-left">Classe</th>
@@ -46,7 +46,7 @@
                     </td>
 
                     <td class="px-6 py-4 text-gray-600">
-                        {{ $seance->date }}
+                        {{ \Carbon\Carbon::parse($seance->date)->locale('fr')->dayName }}
                     </td>
 
                     <td class="px-6 py-4 text-gray-600">
