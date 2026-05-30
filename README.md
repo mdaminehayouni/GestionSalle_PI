@@ -79,7 +79,3 @@ L'application sera accessible à l'adresse : http://127.0.0.1:8000
 
 
 ---
-
-### 💡 Quelques conseils pour votre rendu ou dépôt Git :
-* **Fichiers `.mdj` :** Ce sont des fichiers générés par le logiciel **StarUML**. Si vous souhaitez que vos profils ou vos collègues les visualisent directement sur GitHub sans installer StarUML, vous pouvez exporter vos diagrammes en images (`.png`) et les placer dans un dossier `📁 documentation/` ou `📁 maquette/`. 
-* **Sécurité :** Assurez-vous que le dossier `myApp/.env` est bien présent dans votre fichier
